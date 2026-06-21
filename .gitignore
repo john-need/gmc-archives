@@ -36,3 +36,6 @@ dist-ssr
 
 # Vite
 /dist
+
+# Collections
+/collections

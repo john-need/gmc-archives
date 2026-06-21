@@ -44,6 +44,20 @@ describe("GET /api/documents", () => {
     expect(response.body.documents).toHaveLength(1);
     expect(response.body.documents[0].id).toBe("doc-1");
   });
+
+  it("filters by section", async () => {
+    const app = buildApp([fixtureDocument(), fixtureDocument({ id: "doc-2", section: "Field Reports" })]);
+    const response = await request(app).get("/api/documents").query({ section: "Field Reports" });
+    expect(response.body.documents).toHaveLength(1);
+    expect(response.body.documents[0].id).toBe("doc-2");
+  });
+
+  it("filters by title substring (q), case-insensitively", async () => {
+    const app = buildApp([fixtureDocument(), fixtureDocument({ id: "doc-2", title: "Trail Report" })]);
+    const response = await request(app).get("/api/documents").query({ q: "trail" });
+    expect(response.body.documents).toHaveLength(1);
+    expect(response.body.documents[0].id).toBe("doc-2");
+  });
 });
 
 describe("GET /api/documents/:id", () => {

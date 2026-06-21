@@ -56,6 +56,16 @@ describe("POST /api/batches", () => {
     expect(response.body.error).toBe("BATCH_TOO_LARGE");
     expect(response.body.max).toBe(50);
   });
+
+  it("skips ids that don't match a known archive document", async () => {
+    const docs = fixtureDocuments(1);
+    const app = buildApp(docs);
+    const response = await request(app)
+      .post("/api/batches")
+      .send({ archiveDocumentIds: [docs[0].id, "unknown-doc"] });
+    const statusResponse = await request(app).get(`/api/batches/${response.body.batchId}`);
+    expect(statusResponse.body.documents).toHaveLength(1);
+  });
 });
 
 describe("GET /api/batches/:batchId", () => {
@@ -70,5 +80,12 @@ describe("GET /api/batches/:batchId", () => {
     expect(statusResponse.status).toBe(200);
     expect(statusResponse.body.batchId).toBe(batchId);
     expect(statusResponse.body.documents).toHaveLength(2);
+  });
+
+  it("returns BATCH_NOT_FOUND for an unknown batchId", async () => {
+    const app = buildApp([]);
+    const response = await request(app).get("/api/batches/unknown-batch");
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe("BATCH_NOT_FOUND");
   });
 });

@@ -79,4 +79,20 @@ describe("POST /api/documents/:id/convert", () => {
     expect(response.status).toBe(422);
     expect(response.body.error).toBe("UNSUPPORTED_FORMAT");
   });
+
+  it("returns 404 when the document does not exist", async () => {
+    const app = express();
+    app.use(express.json());
+    app.use(
+      createDocumentsRoutes({
+        store: createMemoryStore([]),
+        documentStorage: createFakeDocumentStorage(),
+        documentProcessor: createFakeDocumentProcessor(),
+        ingestionQueue: createFakeIngestionQueue()
+      })
+    );
+    const response = await request(app).post("/api/documents/unknown/convert");
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe("DOCUMENT_NOT_FOUND");
+  });
 });

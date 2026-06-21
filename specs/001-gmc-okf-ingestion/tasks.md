@@ -113,18 +113,18 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 
 ### Tests for User Story 2 ⚠️ write first, confirm failing
 
-- [ ] T045 [P] [US2] Contract test `POST /api/documents/:id/publish` (success, `ALREADY_PUBLISHED`, `CATALOG_UNAVAILABLE`) in `tests/contract/publish.contract.ts`
-- [ ] T046 [P] [US2] Contract test `POST /api/documents/:id/retry` in `tests/contract/retry.contract.ts`
-- [ ] T047 [P] [US2] Integration test: versioning/supersede on republish (publish v1, correct + publish v2, assert v1 `"superseded"`, v2 `"current"`) in `tests/integration/publish-versioning.integration.ts`
+- [X] T045 [P] [US2] Contract test `POST /api/documents/:id/publish` (success, `ALREADY_PUBLISHED`, `CATALOG_UNAVAILABLE`) in `tests/contract/publish.contract.ts`
+- [X] T046 [P] [US2] Contract test `POST /api/documents/:id/retry` in `tests/contract/retry.contract.ts`
+- [X] T047 [P] [US2] Integration test: versioning/supersede on republish (publish v1, correct + publish v2, assert v1 `"superseded"`, v2 `"current"`) in `tests/integration/publish-versioning.integration.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T048 [P] [US2] Implement pure `publishDecision(existingEntries, newRecord): { action: "publish" | "reject" | "supersede"; ... }` in `src/lib/catalog/publishDecision.ts` (FR-007, FR-007a)
-- [ ] T049 [US2] Implement the publish orchestration (imperative shell: persist `CatalogEntry`, call `SemanticIndex.index`) in `src/backend/ingestion/publishHandler.ts` (depends on T048, T016/T020)
-- [ ] T050 [US2] Implement `POST /api/documents/:id/publish` and `POST /api/documents/:id/retry` in `src/backend/routes/publish.ts` (depends on T049)
-- [ ] T051 [P] [US2] Implement `usePublishDocument`/`useRetryOperation` TanStack Query hooks in `src/app/queries/usePublish.ts`
-- [ ] T052 [US2] Wire publish/retry actions into `BatchStatusDashboard` in `src/app/routes/BatchStatusDashboard.tsx` (depends on T051, T043)
-- [ ] T053 [P] [US2] Implement CLI `publish` and `batch-publish` commands in `src/cli/commands/publish.ts` (depends on T049)
+- [X] T048 [P] [US2] Implement pure `publishDecision(existingEntries, newRecord): { action: "publish" | "reject" | "supersede"; ... }` in `src/lib/catalog/publishDecision.ts` (FR-007, FR-007a)
+- [X] T049 [US2] Implement the publish orchestration (imperative shell: persist `CatalogEntry`, call `SemanticIndex.index`) in `src/backend/ingestion/publishHandler.ts` (depends on T048, T016/T020)
+- [X] T050 [US2] Implement `POST /api/documents/:id/publish` and `POST /api/documents/:id/retry` in `src/backend/routes/publish.ts` (depends on T049)
+- [X] T051 [P] [US2] Implement `usePublishDocument`/`useRetryOperation` TanStack Query hooks in `src/app/queries/usePublish.ts`
+- [X] T052 [US2] Wire publish/retry actions into `BatchStatusDashboard` in `src/app/routes/BatchStatusDashboard.tsx` (depends on T051, T043)
+- [X] T053 [P] [US2] Implement CLI `publish` and `batch-publish` commands in `src/cli/commands/publish.ts` (depends on T049)
 
 **Checkpoint**: User Stories 1 AND 2 both work independently
 
@@ -138,20 +138,20 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 
 ### Tests for User Story 3 ⚠️ write first, confirm failing
 
-- [ ] T054 [P] [US3] Contract test `GET /api/catalog/search` (semantic ranking, structured filters, empty results) in `tests/contract/catalog-search.contract.ts`
-- [ ] T055 [P] [US3] Contract test `GET /api/documents/:id/download` (original format preserved, `SOURCE_UNAVAILABLE`) in `tests/contract/download.contract.ts`
-- [ ] T056 [P] [US3] Component test for the `CatalogSearch` view (query input, filters, results, empty state, download action, keyboard-operable search/filter controls, accessible names/ARIA roles) in `tests/component/CatalogSearch.test.tsx` (constitution §Accessibility)
+- [X] T054 [P] [US3] Contract test `GET /api/catalog/search` (semantic ranking, structured filters, empty results) in `tests/contract/catalog-search.contract.ts`
+- [X] T055 [P] [US3] Contract test `GET /api/documents/:id/download` (original format preserved, `SOURCE_UNAVAILABLE`) in `tests/contract/download.contract.ts`
+- [X] T056 [P] [US3] Component test for the `CatalogSearch` view (query input, filters, results, empty state, download action, keyboard-operable search/filter controls, accessible names/ARIA roles) in `tests/component/CatalogSearch.test.tsx` (constitution §Accessibility)
 
 ### Implementation for User Story 3
 
-- [ ] T057 [P] [US3] Implement pure `applyStructuredFilters(results, filters)` in `src/lib/search/applyFilters.ts` (FR-013)
-- [ ] T058 [US3] Implement `semanticSearch` orchestration (query embedding + `SemanticIndex.query` + `applyStructuredFilters`, excluding superseded entries by default) in `src/lib/search/semanticSearch.ts` (depends on T057, T020)
-- [ ] T059 [P] [US3] Implement pure `resolveContentType(sourceFormat)` in `src/lib/storage/resolveContentType.ts` (FR-014)
-- [ ] T060 [US3] Implement `downloadDocument` orchestration wrapping `DocumentStorage.download` + `resolveContentType` in `src/lib/storage/downloadDocument.ts` (depends on T059, T017)
-- [ ] T061 [US3] Implement `GET /api/catalog/search` and `GET /api/documents/:id/download` in `src/backend/routes/catalog.ts` (depends on T058, T060)
-- [ ] T062 [P] [US3] Implement `useCatalogSearch`/`useDownloadDocument` hooks in `src/app/queries/useCatalog.ts`
-- [ ] T063 [US3] Implement the `CatalogSearch` view in `src/app/routes/CatalogSearch.tsx` (depends on T062; makes T056 pass)
-- [ ] T064 [P] [US3] Implement CLI `search` and `download` commands in `src/cli/commands/search.ts` (depends on T058, T060)
+- [X] T057 [P] [US3] Implement pure `applyStructuredFilters(results, filters)` in `src/lib/search/applyFilters.ts` (FR-013)
+- [X] T058 [US3] Implement `semanticSearch` orchestration (query embedding + `SemanticIndex.query` + `applyStructuredFilters`, excluding superseded entries by default) in `src/lib/search/semanticSearch.ts` (depends on T057, T020)
+- [X] T059 [P] [US3] Implement pure `resolveContentType(sourceFormat)` in `src/lib/storage/resolveContentType.ts` (FR-014)
+- [X] T060 [US3] Implement `downloadDocument` orchestration wrapping `DocumentStorage.download` + `resolveContentType` in `src/lib/storage/downloadDocument.ts` (depends on T059, T017)
+- [X] T061 [US3] Implement `GET /api/catalog/search` and `GET /api/documents/:id/download` in `src/backend/routes/catalog.ts` (depends on T058, T060)
+- [X] T062 [P] [US3] Implement `useCatalogSearch`/`useDownloadDocument` hooks in `src/app/queries/useCatalog.ts`
+- [X] T063 [US3] Implement the `CatalogSearch` view in `src/app/routes/CatalogSearch.tsx` (depends on T062; makes T056 pass)
+- [X] T064 [P] [US3] Implement CLI `search` and `download` commands in `src/cli/commands/search.ts` (depends on T058, T060)
 
 **Checkpoint**: User Stories 1, 2, AND 3 all work independently
 
@@ -165,16 +165,16 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 
 ### Tests for User Story 4 ⚠️ write first, confirm failing
 
-- [ ] T065 [P] [US4] Contract test `GET /api/documents/:id/discoverability` (`"pending"` → `"discoverable"`) in `tests/contract/discoverability.contract.ts`
-- [ ] T066 [P] [US4] Component test for the discoverability status badge (accessible name conveys "pending" vs. "discoverable" to assistive tech, not color alone) in `tests/component/DiscoverabilityBadge.test.tsx` (constitution §Accessibility)
+- [X] T065 [P] [US4] Contract test `GET /api/documents/:id/discoverability` (`"pending"` → `"discoverable"`) in `tests/contract/discoverability.contract.ts`
+- [X] T066 [P] [US4] Component test for the discoverability status badge (accessible name conveys "pending" vs. "discoverable" to assistive tech, not color alone) in `tests/component/DiscoverabilityBadge.test.tsx` (constitution §Accessibility)
 
 ### Implementation for User Story 4
 
-- [ ] T067 [P] [US4] Implement pure `checkDiscoverability(embeddingId)` wrapping `SemanticIndex.isQueryable` in `src/lib/search/checkDiscoverability.ts` (depends on T020)
-- [ ] T068 [US4] Implement `GET /api/documents/:id/discoverability` in `src/backend/routes/discoverability.ts` (depends on T067)
-- [ ] T069 [P] [US4] Implement `useDiscoverability` hook in `src/app/queries/useDiscoverability.ts`
-- [ ] T070 [US4] Implement `DiscoverabilityBadge` component and integrate it into `BatchStatusDashboard` and `CatalogSearch` results in `src/app/components/DiscoverabilityBadge.tsx` (depends on T069; makes T066 pass)
-- [ ] T071 [P] [US4] Implement CLI `status` command surfacing discoverability in `src/cli/commands/status.ts` (depends on T067)
+- [X] T067 [P] [US4] Implement pure `checkDiscoverability(embeddingId)` wrapping `SemanticIndex.isQueryable` in `src/lib/search/checkDiscoverability.ts` (depends on T020)
+- [X] T068 [US4] Implement `GET /api/documents/:id/discoverability` in `src/backend/routes/discoverability.ts` (depends on T067)
+- [X] T069 [P] [US4] Implement `useDiscoverability` hook in `src/app/queries/useDiscoverability.ts`
+- [X] T070 [US4] Implement `DiscoverabilityBadge` component and integrate it into `BatchStatusDashboard` and `CatalogSearch` results in `src/app/components/DiscoverabilityBadge.tsx` (depends on T069; makes T066 pass)
+- [X] T071 [P] [US4] Implement CLI `status` command surfacing discoverability in `src/cli/commands/status.ts` (depends on T067)
 
 **Checkpoint**: All user stories are independently functional
 
@@ -184,16 +184,16 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 
 **Purpose**: The remaining FR-012 view (publication history, supporting FR-009 across all stories) and quality/operability gates
 
-- [ ] T072 [P] Contract test `GET /api/history` in `tests/contract/history.contract.ts` (FR-009)
-- [ ] T073 Implement `GET /api/history` in `src/backend/routes/history.ts` (depends on T072, T007)
-- [ ] T074 [P] Implement `useHistory` hook in `src/app/queries/useHistory.ts`
-- [ ] T075 Implement the `PublicationHistory` view (the fourth `HashRouter` route) in `src/app/routes/PublicationHistory.tsx` (depends on T074; completes FR-012's four views)
-- [ ] T076 [P] Playwright e2e: quickstart.md scenarios 1–4 (convert → publish/version → search/download → discoverability) in `tests/e2e/full-pipeline.spec.ts`
-- [ ] T077 [P] Playwright e2e: role enforcement, batch cap, and retry flows (quickstart.md scenario 5) in `tests/e2e/roles-and-batches.spec.ts`
-- [ ] T078 [P] Verify Cloud Monitoring-visible structured logs across all backend routes and the Pub/Sub subscriber, with request-id correlation, in `src/backend/middleware/requestLogging.ts` (research.md §7)
-- [ ] T079 Security hardening pass: confirm no Google credentials/env secrets are referenced from `src/app`, CORS restricted to the app's own origin, session cookies `httpOnly`/`secure` in `src/backend/app.ts`
-- [ ] T080 [P] Accessibility audit across all four views (`DocumentBrowser`, `BatchStatusDashboard`, `CatalogSearch`, `PublicationHistory`): automated `jest-axe`/Playwright-axe scan plus manual keyboard-only navigation and color-contrast check; file and fix any findings (constitution §Accessibility — "regular accessibility audits MUST be conducted")
-- [ ] T081 [P] Quality-gate check: run `npm test -- --coverage` and confirm the `coverageThreshold` configured in T004 (≥90% branches/functions/lines/statements) passes; wire this check into the CI/merge gate (constitution §"Test First Development", Development Workflow)
+- [X] T072 [P] Contract test `GET /api/history` in `tests/contract/history.contract.ts` (FR-009)
+- [X] T073 Implement `GET /api/history` in `src/backend/routes/history.ts` (depends on T072, T007)
+- [X] T074 [P] Implement `useHistory` hook in `src/app/queries/useHistory.ts`
+- [X] T075 Implement the `PublicationHistory` view (the fourth `HashRouter` route) in `src/app/routes/PublicationHistory.tsx` (depends on T074; completes FR-012's four views)
+- [X] T076 [P] Playwright e2e: quickstart.md scenarios 1–4 (convert → publish/version → search/download → discoverability) in `tests/e2e/full-pipeline.spec.ts`
+- [X] T077 [P] Playwright e2e: role enforcement, batch cap, and retry flows (quickstart.md scenario 5) in `tests/e2e/roles-and-batches.spec.ts`
+- [X] T078 [P] Verify Cloud Monitoring-visible structured logs across all backend routes and the Pub/Sub subscriber, with request-id correlation, in `src/backend/middleware/requestLogging.ts` (research.md §7)
+- [X] T079 Security hardening pass: confirm no Google credentials/env secrets are referenced from `src/app`, CORS restricted to the app's own origin, session cookies `httpOnly`/`secure` in `src/backend/app.ts`
+- [X] T080 [P] Accessibility audit across all four views (`DocumentBrowser`, `BatchStatusDashboard`, `CatalogSearch`, `PublicationHistory`): automated `jest-axe`/Playwright-axe scan plus manual keyboard-only navigation and color-contrast check; file and fix any findings (constitution §Accessibility — "regular accessibility audits MUST be conducted")
+- [X] T081 [P] Quality-gate check: run `npm test -- --coverage` and confirm the `coverageThreshold` configured in T004 (≥90% branches/functions/lines/statements) passes; wire this check into the CI/merge gate (constitution §"Test First Development", Development Workflow)
 - [ ] T082 Run quickstart.md validation end-to-end against a real or sandboxed Google Cloud project; record results
 
 ---

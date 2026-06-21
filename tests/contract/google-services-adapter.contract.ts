@@ -61,10 +61,10 @@ describe("SemanticIndex contract: fake", () => {
   });
 
   it("isQueryable returns false immediately after index() and true once ready", async () => {
-    const index = createFakeSemanticIndex({ queryableAfterMs: 10 });
+    const index = createFakeSemanticIndex({ queryableAfterMs: 200 });
     const { embeddingId } = await index.index({ catalogEntryId: "entry-1", text: "trail report" });
     expect(await index.isQueryable(embeddingId)).toBe(false);
-    await new Promise((resolve) => setTimeout(resolve, 20));
+    await new Promise((resolve) => setTimeout(resolve, 250));
     expect(await index.isQueryable(embeddingId)).toBe(true);
   });
 });

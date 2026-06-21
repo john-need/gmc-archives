@@ -3,7 +3,7 @@ import type { DocumentStorage } from "@/lib/storage/documentStorage";
 import type { DocumentProcessor } from "@/lib/conversion/documentProcessor";
 import type { IngestionQueue } from "@/backend/ingestion/ingestionQueue";
 import type { MemoryStore } from "@/backend/store/memoryStore";
-import { convertDocument } from "@/backend/ingestion/conversionHandler";
+import { attemptConversion } from "@/backend/ingestion/conversionHandler";
 
 export interface DocumentsRoutesDeps {
   store: MemoryStore;
@@ -44,23 +44,12 @@ export function createDocumentsRoutes(deps: DocumentsRoutesDeps): Router {
       return;
     }
 
-    const result = await convertDocument(document, {
-      documentStorage: deps.documentStorage,
-      documentProcessor: deps.documentProcessor,
-      ingestionQueue: deps.ingestionQueue
-    });
-
-    if (result.outcome === "error" && result.error === "INCOMPLETE_METADATA") {
-      res.status(422).json({ error: result.error, missingFields: result.missingFields });
-      return;
-    }
-    if (result.outcome === "error") {
-      res.status(422).json({ error: result.error });
-      return;
-    }
-
-    deps.store.okfRecords.set(result.okfRecord.id, result.okfRecord);
-    res.status(200).json({ okfRecord: result.okfRecord });
+    const outcome = await attemptConversion(
+      document,
+      { documentStorage: deps.documentStorage, documentProcessor: deps.documentProcessor, ingestionQueue: deps.ingestionQueue },
+      deps.store
+    );
+    res.status(outcome.httpStatus).json(outcome.body);
   });
 
   return router;

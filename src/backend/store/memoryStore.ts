@@ -16,7 +16,3 @@ export function createMemoryStore(seedDocuments: ArchiveDocument[] = []): Memory
     batches: new Map()
   };
 }
-
-export function pipelineStatusKey(archiveDocumentId: string): string {
-  return archiveDocumentId;
-}

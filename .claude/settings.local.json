@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/johnneed/.local/share/uv/tools/specify-cli/lib/python3.13/site-packages/specify_cli/bundler/**)",
+      "Bash(uv tool *)",
+      "Read(//Users/johnneed/.local/share/uv/tools/specify-cli/lib/python3.13/site-packages/**)",
+      "Bash(specify --help)",
+      "Bash(curl -s https://api.github.com/repos/github/spec-kit/tags)",
+      "Bash(specify init *)",
+      "Bash(yes)",
+      "Bash(bash *)"
+    ]
+  }
+}

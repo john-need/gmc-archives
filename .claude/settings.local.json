@@ -9,7 +9,12 @@
       "Bash(specify init *)",
       "Bash(yes)",
       "Bash(bash *)",
-      "Bash(.specify/scripts/bash/check-prerequisites.sh *)"
+      "Bash(.specify/scripts/bash/check-prerequisites.sh *)",
+      "Bash(npm install *)",
+      "Bash(npx jest *)",
+      "Bash(npx tsc *)",
+      "Bash(npx eslint *)",
+      "Bash(python3 -c ' *)"
     ]
   }
 }

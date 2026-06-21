@@ -31,12 +31,12 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 
 **Purpose**: Project initialization and tooling per the user's explicit stack/tooling requirements (research.md §10–§11)
 
-- [ ] T001 Create project directory structure: `src/lib/{auth,conversion,storage,catalog,search}`, `src/cli`, `src/backend/{routes,ingestion,middleware,store}`, `src/app/{routes,components,store,queries}`, `tests/{contract,integration,component,e2e}`
-- [ ] T002 Initialize `package.json` with TypeScript, React 18, Redux Toolkit, TanStack Query, Ramda, `react-router-dom`, a minimal Node HTTP framework for `src/backend`, Google Cloud client libraries (Storage, Pub/Sub, Document AI, vector search), Jest, `ts-jest`, `@testing-library/react`, `jest-axe` and `@axe-core/playwright` (constitution §Accessibility), Playwright, ESLint + `@typescript-eslint`
-- [ ] T003 [P] Configure `tsconfig.json`: `strict: true`, `noImplicitAny: true`, target ES2020, `paths` mapping `@/*` → `src/*` (research.md §11)
-- [ ] T004 [P] Configure `jest.config.ts`: `moduleNameMapper` for `^@/(.*)$` → `<rootDir>/src/$1`, TypeScript transform, separate `jsdom`/`node` test environments for `src/app` vs. `src/lib`/`src/backend`, and `coverageThreshold: { global: { branches: 90, functions: 90, lines: 90, statements: 90 } }` per constitution §"Test First Development" (research.md §11)
-- [ ] T005 [P] Configure `.eslintrc.cjs`: `quotes: ["error", "double"]`, `comma-dangle: ["error", "never"]`, `semi: ["error", "always"]`, `curly: ["error", "all"]`, `@typescript-eslint/no-explicit-any: "error"` (research.md §10)
-- [ ] T006 [P] Configure `playwright.config.ts` targeting `tests/e2e`
+- [X] T001 Create project directory structure: `src/lib/{auth,conversion,storage,catalog,search}`, `src/cli`, `src/backend/{routes,ingestion,middleware,store}`, `src/app/{routes,components,store,queries}`, `tests/{contract,integration,component,e2e}`
+- [X] T002 Initialize `package.json` with TypeScript, React 18, Redux Toolkit, TanStack Query, Ramda, `react-router-dom`, a minimal Node HTTP framework for `src/backend`, Google Cloud client libraries (Storage, Pub/Sub, Document AI, vector search), Jest, `ts-jest`, `@testing-library/react`, `jest-axe` and `@axe-core/playwright` (constitution §Accessibility), Playwright, ESLint + `@typescript-eslint`
+- [X] T003 [P] Configure `tsconfig.json`: `strict: true`, `noImplicitAny: true`, target ES2020, `paths` mapping `@/*` → `src/*` (research.md §11)
+- [X] T004 [P] Configure `jest.config.ts`: `moduleNameMapper` for `^@/(.*)$` → `<rootDir>/src/$1`, TypeScript transform, separate `jsdom`/`node` test environments for `src/app` vs. `src/lib`/`src/backend`, and `coverageThreshold: { global: { branches: 90, functions: 90, lines: 90, statements: 90 } }` per constitution §"Test First Development" (research.md §11)
+- [X] T005 [P] Configure `.eslintrc.cjs`: `quotes: ["error", "double"]`, `comma-dangle: ["error", "never"]`, `semi: ["error", "always"]`, `curly: ["error", "all"]`, `@typescript-eslint/no-explicit-any: "error"` (research.md §10)
+- [X] T006 [P] Configure `playwright.config.ts` targeting `tests/e2e`
 
 ---
 
@@ -46,27 +46,27 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 [P] Define shared domain types in `src/lib/types.ts`: `ArchiveDocument`, `OkfRecord`, `CatalogEntry`, `PipelineStatus`, `AttemptRecord`, `Batch`, `User` (data-model.md) — plain immutable interfaces/types, no classes
-- [ ] T008 [P] Contract test for the `AuthProvider` interface in `tests/contract/auth-provider.contract.ts`, run against both a fake and a Google-backed implementation (contracts/auth-provider.md) — write first, confirm it fails
-- [ ] T009 [P] Contract test for the Google services adapter interfaces (`DocumentStorage`, `IngestionQueue`, `DocumentProcessor`, `SemanticIndex`) in `tests/contract/google-services-adapter.contract.ts` (contracts/google-services-adapter.md) — write first, confirm it fails
-- [ ] T010 [P] Contract test for role-enforcement (Viewer → 403 on Publisher-only routes) in `tests/contract/require-role.contract.ts` (FR-001a) — write first, confirm it fails
-- [ ] T011 Implement `AuthProvider` interface and `FakeAuthProvider` as pure factory functions (no classes) in `src/lib/auth/authProvider.ts`, `src/lib/auth/fakeAuthProvider.ts` (makes the fake half of T008 pass)
-- [ ] T012 Implement `GoogleAuthProvider` backed by Cloud Identity / Google Identity Services in `src/lib/auth/googleAuthProvider.ts` (research.md §6; makes the Google half of T008 pass)
-- [ ] T013 [P] Implement fake in-memory `DocumentStorage` in `src/lib/storage/fakeDocumentStorage.ts` (pure data + functions, no hidden mutable singletons beyond an explicit in-memory map passed by the caller)
-- [ ] T014 [P] Implement fake in-memory `DocumentProcessor` in `src/lib/conversion/fakeDocumentProcessor.ts`, returning configurable `body`/`author`/`location`/`entities`/`confidence`
-- [ ] T015 [P] Implement fake in-memory `IngestionQueue` in `src/backend/ingestion/fakeIngestionQueue.ts`
-- [ ] T016 [P] Implement fake in-memory `SemanticIndex` in `src/lib/search/fakeSemanticIndex.ts`, including a configurable "not yet queryable" delay to exercise `isQueryable` (makes T009 pass once T013–T016 are all in place)
-- [ ] T017 Implement real Cloud Storage-backed `DocumentStorage` in `src/lib/storage/cloudStorageAdapter.ts` (research.md §1)
-- [ ] T018 Implement real Pub/Sub-backed `IngestionQueue` in `src/backend/ingestion/pubsubQueue.ts` (research.md §1–§2)
-- [ ] T019 Implement real Document AI-backed `DocumentProcessor` in `src/lib/conversion/documentAiProcessor.ts` (research.md §2)
-- [ ] T020 Implement real vector-search-backed `SemanticIndex` in `src/lib/search/vectorSearchIndex.ts` (research.md §3)
-- [ ] T021 Implement pure role predicate `canAccess(role, route)` in `src/lib/auth/canAccess.ts`, then a thin Express `requireRole` middleware wrapping it in `src/backend/middleware/requireRole.ts` (FR-001a; makes T010 pass)
-- [ ] T022 Implement session middleware wiring `AuthProvider` into requests in `src/backend/middleware/session.ts`, and `GET /api/session` in `src/backend/routes/session.ts` (FR-001b)
-- [ ] T023 [P] Scaffold the App Engine backend entry point in `src/backend/app.ts`: wires session + `requireRole` middleware and a structured-JSON error-handling middleware
-- [ ] T024 [P] Scaffold the CLI entry point in `src/cli/index.ts` with argument parsing, and a pure `formatOutput(data, mode)` function plus thin stdout/stderr writers in `src/cli/output.ts` (Principle II)
-- [ ] T025 [P] Scaffold the React app shell in `src/app/index.tsx` with a `HashRouter` and four route placeholders (browse, batch status, history, catalog search) in `src/app/routes/index.tsx` (FR-012)
-- [ ] T026 [P] Scaffold the Redux store (`src/app/store/store.ts`) and TanStack Query client (`src/app/queries/queryClient.ts`)
-- [ ] T027 Implement a pure log-entry formatter in `src/lib/logging.ts` plus a thin emitter, wired into backend middleware and the Pub/Sub subscriber so output is consumable by Cloud Monitoring (research.md §7)
+- [X] T007 [P] Define shared domain types in `src/lib/types.ts`: `ArchiveDocument`, `OkfRecord`, `CatalogEntry`, `PipelineStatus`, `AttemptRecord`, `Batch`, `User` (data-model.md) — plain immutable interfaces/types, no classes
+- [X] T008 [P] Contract test for the `AuthProvider` interface in `tests/contract/auth-provider.contract.ts`, run against both a fake and a Google-backed implementation (contracts/auth-provider.md) — write first, confirm it fails
+- [X] T009 [P] Contract test for the Google services adapter interfaces (`DocumentStorage`, `IngestionQueue`, `DocumentProcessor`, `SemanticIndex`) in `tests/contract/google-services-adapter.contract.ts` (contracts/google-services-adapter.md) — write first, confirm it fails
+- [X] T010 [P] Contract test for role-enforcement (Viewer → 403 on Publisher-only routes) in `tests/contract/require-role.contract.ts` (FR-001a) — write first, confirm it fails
+- [X] T011 Implement `AuthProvider` interface and `FakeAuthProvider` as pure factory functions (no classes) in `src/lib/auth/authProvider.ts`, `src/lib/auth/fakeAuthProvider.ts` (makes the fake half of T008 pass)
+- [X] T012 Implement `GoogleAuthProvider` backed by Cloud Identity / Google Identity Services in `src/lib/auth/googleAuthProvider.ts` (research.md §6; makes the Google half of T008 pass)
+- [X] T013 [P] Implement fake in-memory `DocumentStorage` in `src/lib/storage/fakeDocumentStorage.ts` (pure data + functions, no hidden mutable singletons beyond an explicit in-memory map passed by the caller)
+- [X] T014 [P] Implement fake in-memory `DocumentProcessor` in `src/lib/conversion/fakeDocumentProcessor.ts`, returning configurable `body`/`author`/`location`/`entities`/`confidence`
+- [X] T015 [P] Implement fake in-memory `IngestionQueue` in `src/backend/ingestion/fakeIngestionQueue.ts`
+- [X] T016 [P] Implement fake in-memory `SemanticIndex` in `src/lib/search/fakeSemanticIndex.ts`, including a configurable "not yet queryable" delay to exercise `isQueryable` (makes T009 pass once T013–T016 are all in place)
+- [X] T017 Implement real Cloud Storage-backed `DocumentStorage` in `src/lib/storage/cloudStorageAdapter.ts` (research.md §1)
+- [X] T018 Implement real Pub/Sub-backed `IngestionQueue` in `src/backend/ingestion/pubsubQueue.ts` (research.md §1–§2)
+- [X] T019 Implement real Document AI-backed `DocumentProcessor` in `src/lib/conversion/documentAiProcessor.ts` (research.md §2)
+- [X] T020 Implement real vector-search-backed `SemanticIndex` in `src/lib/search/vectorSearchIndex.ts` (research.md §3)
+- [X] T021 Implement pure role predicate `canAccess(role, route)` in `src/lib/auth/canAccess.ts`, then a thin Express `requireRole` middleware wrapping it in `src/backend/middleware/requireRole.ts` (FR-001a; makes T010 pass)
+- [X] T022 Implement session middleware wiring `AuthProvider` into requests in `src/backend/middleware/session.ts`, and `GET /api/session` in `src/backend/routes/session.ts` (FR-001b)
+- [X] T023 [P] Scaffold the App Engine backend entry point in `src/backend/app.ts`: wires session + `requireRole` middleware and a structured-JSON error-handling middleware
+- [X] T024 [P] Scaffold the CLI entry point in `src/cli/index.ts` with argument parsing, and a pure `formatOutput(data, mode)` function plus thin stdout/stderr writers in `src/cli/output.ts` (Principle II)
+- [X] T025 [P] Scaffold the React app shell in `src/app/index.tsx` with a `HashRouter` and four route placeholders (browse, batch status, history, catalog search) in `src/app/routes/index.tsx` (FR-012)
+- [X] T026 [P] Scaffold the Redux store (`src/app/store/store.ts`) and TanStack Query client (`src/app/queries/queryClient.ts`)
+- [X] T027 Implement a pure log-entry formatter in `src/lib/logging.ts` plus a thin emitter, wired into backend middleware and the Pub/Sub subscriber so output is consumable by Cloud Monitoring (research.md §7)
 
 **Checkpoint**: Foundation ready — user story implementation can now begin
 
@@ -80,26 +80,26 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 
 ### Tests for User Story 1 ⚠️ write first, confirm failing
 
-- [ ] T028 [P] [US1] Contract test `GET /api/documents` and `GET /api/documents/:id` in `tests/contract/documents.contract.ts`
-- [ ] T029 [P] [US1] Contract test `POST /api/documents/:id/convert` (success, `INCOMPLETE_METADATA`, `UNSUPPORTED_FORMAT`) in `tests/contract/convert.contract.ts`
-- [ ] T030 [P] [US1] Contract test `POST /api/batches` including the 50-document cap (FR-011) in `tests/contract/batches.contract.ts`
-- [ ] T031 [P] [US1] Integration test: end-to-end conversion through the fakes (upload → queue → process → `OkfRecord` with `author`/`location`/`entities`) in `tests/integration/convert.integration.ts`
-- [ ] T032 [P] [US1] Component test for the document browser view (list, select, initiate conversion, missing-metadata error display, keyboard navigation through the list, accessible names/ARIA roles on all interactive elements) in `tests/component/DocumentBrowser.test.tsx` (constitution §Accessibility)
+- [X] T028 [P] [US1] Contract test `GET /api/documents` and `GET /api/documents/:id` in `tests/contract/documents.contract.ts`
+- [X] T029 [P] [US1] Contract test `POST /api/documents/:id/convert` (success, `INCOMPLETE_METADATA`, `UNSUPPORTED_FORMAT`) in `tests/contract/convert.contract.ts`
+- [X] T030 [P] [US1] Contract test `POST /api/batches` including the 50-document cap (FR-011) in `tests/contract/batches.contract.ts`
+- [X] T031 [P] [US1] Integration test: end-to-end conversion through the fakes (upload → queue → process → `OkfRecord` with `author`/`location`/`entities`) in `tests/integration/convert.integration.ts`
+- [X] T032 [P] [US1] Component test for the document browser view (list, select, initiate conversion, missing-metadata error display, keyboard navigation through the list, accessible names/ARIA roles on all interactive elements) in `tests/component/DocumentBrowser.test.tsx` (constitution §Accessibility)
 
 ### Implementation for User Story 1
 
-- [ ] T033 [P] [US1] Implement pure `validateMetadata(archiveDocument): { complete: boolean; missingFields: string[] }` in `src/lib/conversion/validateMetadata.ts`
-- [ ] T034 [P] [US1] Implement pure `mapExtractionToOkfRecord(archiveDocument, extraction): OkfRecord` in `src/lib/conversion/mapExtractionToOkfRecord.ts` (FR-002, FR-002b)
-- [ ] T035 [P] [US1] Implement pure `validateBatchSize(archiveDocumentIds): Result` (max 50) in `src/lib/catalog/validateBatchSize.ts` (FR-011)
-- [ ] T036 [US1] Implement the conversion orchestration (imperative shell composing T033/T034 with `DocumentStorage`/`IngestionQueue`/`DocumentProcessor`) in `src/backend/ingestion/conversionHandler.ts` (depends on T033–T034, T013–T014/T017/T019)
-- [ ] T037 [US1] Implement batch-creation handling (using T035) in `src/backend/routes/batches.ts` (depends on T035)
-- [ ] T038 [US1] Implement `GET /api/documents`, `GET /api/documents/:id`, `POST /api/documents/:id/convert` in `src/backend/routes/documents.ts` (depends on T036)
-- [ ] T039 [US1] Implement `GET /api/batches/:batchId` status endpoint in `src/backend/routes/batches.ts` (extends T037's file; depends on T037)
-- [ ] T040 [P] [US1] Implement `useDocuments`/`useConvertDocument` TanStack Query hooks in `src/app/queries/useDocuments.ts`
-- [ ] T041 [P] [US1] Implement `documentsSlice` (Redux Toolkit) for selection state in `src/app/store/documentsSlice.ts`; actions MUST be plain objects, reducers MUST be pure functions per constitution §Redux — note in a code comment that RTK's Immer-backed draft-mutation syntax is the one documented exception to the no-mutation rule, since it preserves the pure-reducer contract (tasks.md preamble, "Paradigm note")
-- [ ] T042 [US1] Implement the `DocumentBrowser` view (function component) in `src/app/routes/DocumentBrowser.tsx` (depends on T040–T041; makes T032 pass)
-- [ ] T043 [US1] Implement the `BatchStatusDashboard` view, read-only per-document status list, in `src/app/routes/BatchStatusDashboard.tsx` (depends on T039)
-- [ ] T044 [P] [US1] Implement CLI `convert` and `batch-convert` commands in `src/cli/commands/convert.ts` (Principle II; depends on T036–T037)
+- [X] T033 [P] [US1] Implement pure `validateMetadata(archiveDocument): { complete: boolean; missingFields: string[] }` in `src/lib/conversion/validateMetadata.ts`
+- [X] T034 [P] [US1] Implement pure `mapExtractionToOkfRecord(archiveDocument, extraction): OkfRecord` in `src/lib/conversion/mapExtractionToOkfRecord.ts` (FR-002, FR-002b)
+- [X] T035 [P] [US1] Implement pure `validateBatchSize(archiveDocumentIds): Result` (max 50) in `src/lib/catalog/validateBatchSize.ts` (FR-011)
+- [X] T036 [US1] Implement the conversion orchestration (imperative shell composing T033/T034 with `DocumentStorage`/`IngestionQueue`/`DocumentProcessor`) in `src/backend/ingestion/conversionHandler.ts` (depends on T033–T034, T013–T014/T017/T019)
+- [X] T037 [US1] Implement batch-creation handling (using T035) in `src/backend/routes/batches.ts` (depends on T035)
+- [X] T038 [US1] Implement `GET /api/documents`, `GET /api/documents/:id`, `POST /api/documents/:id/convert` in `src/backend/routes/documents.ts` (depends on T036)
+- [X] T039 [US1] Implement `GET /api/batches/:batchId` status endpoint in `src/backend/routes/batches.ts` (extends T037's file; depends on T037)
+- [X] T040 [P] [US1] Implement `useDocuments`/`useConvertDocument` TanStack Query hooks in `src/app/queries/useDocuments.ts`
+- [X] T041 [P] [US1] Implement `documentsSlice` (Redux Toolkit) for selection state in `src/app/store/documentsSlice.ts`; actions MUST be plain objects, reducers MUST be pure functions per constitution §Redux — note in a code comment that RTK's Immer-backed draft-mutation syntax is the one documented exception to the no-mutation rule, since it preserves the pure-reducer contract (tasks.md preamble, "Paradigm note")
+- [X] T042 [US1] Implement the `DocumentBrowser` view (function component) in `src/app/routes/DocumentBrowser.tsx` (depends on T040–T041; makes T032 pass)
+- [X] T043 [US1] Implement the `BatchStatusDashboard` view, read-only per-document status list, in `src/app/routes/BatchStatusDashboard.tsx` (depends on T039)
+- [X] T044 [P] [US1] Implement CLI `convert` and `batch-convert` commands in `src/cli/commands/convert.ts` (Principle II; depends on T036–T037)
 
 **Checkpoint**: User Story 1 is fully functional and testable independently
 

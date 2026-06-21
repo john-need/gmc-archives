@@ -8,7 +8,8 @@
       "Bash(curl -s https://api.github.com/repos/github/spec-kit/tags)",
       "Bash(specify init *)",
       "Bash(yes)",
-      "Bash(bash *)"
+      "Bash(bash *)",
+      "Bash(.specify/scripts/bash/check-prerequisites.sh *)"
     ]
   }
 }

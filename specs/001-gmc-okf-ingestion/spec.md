@@ -160,7 +160,15 @@ independent of running a new conversion or publish.
 - What happens when Google's services are unreachable or return an
   authentication/authorization error?
 - How does the system handle two archivists attempting to convert or publish
-  the same source document at the same time?
+  the same source document at the same time? **Resolved (speckit-analyze
+  F2)**: concurrent conversions of the same document are independent and
+  both succeed (conversion has no shared mutable state to race over —
+  FR-010); concurrent publishes are resolved by the existing
+  version/supersede rule (FR-007a) — whichever publish is recorded second
+  becomes the new `"current"` version and supersedes the other, so neither
+  request errors and no document is left in an inconsistent state. No
+  additional locking is introduced, consistent with the constitution's
+  Simplicity/YAGNI principle.
 - What happens when a user searches for a document by a version that has
   since been superseded — does the system surface the superseded version,
   the latest version, or both with a clear indication of which is current?
@@ -168,7 +176,11 @@ independent of running a new conversion or publish.
   catalog entry whose original file is no longer available in storage?
 - How does the system handle a Viewer searching the catalog while a batch
   publish operation is still in progress (should in-flight, not-yet-fully
-  published documents appear in results)?
+  published documents appear in results)? **Resolved**: by construction, a
+  document only becomes searchable once its `CatalogEntry` and embedding
+  exist (FR-013); an in-flight, not-yet-published document has no
+  `CatalogEntry` yet and therefore cannot appear in search results — no
+  separate in-flight filtering logic is needed.
 
 ## Requirements *(mandatory)*
 

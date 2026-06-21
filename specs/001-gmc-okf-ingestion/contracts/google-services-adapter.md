@@ -18,7 +18,7 @@ interface IngestionQueue {
 }
 
 interface DocumentProcessor {
-  extract(file: { stream: ReadableStream; sourceFormat: "pdf" | "scanned-image" | "text" }): Promise<{
+  extract(file: { stream: ReadableStream; sourceFormat: "pdf" | "scanned-image" | "text" | "markdown" }): Promise<{
     body: string;
     author: string | null;
     location: string | null;

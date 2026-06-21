@@ -75,6 +75,13 @@ testability, and maintainability across the codebase. Any deviation from functio
 - Accessibility considerations MUST be integrated into the design and development process from the outset, rather than being treated as an afterthought. This promotes a more inclusive user experience and helps to ensure that the application is usable by a wider audience. Adherence to this principle is essential for achieving the goals of simplicity, testability, and maintainability outlined in the other core principles, and any exceptions must be carefully considered and documented.
 - Regular accessibility audits MUST be conducted, and any identified issues MUST be addressed in a timely manner. This ensures that the application remains accessible as it evolves and helps to maintain a high standard of inclusivity. Adherence to this principle is important for maintaining the integrity of the accessibility commitment, and any exceptions must be carefully considered and documented.
 
+### Naming Conventions
+- file names should be in kebab-case.
+- Functions and variables should be in camelCase.
+- Class names and React components should be in PascalCase.
+- Constants should be in UPPER_SNAKE_CASE.
+- Adherence to consistent naming conventions is crucial for readability and maintainability of the codebase.
+
 ## Additional Constraints
 
 This project is a Node.js-based repository (see `package.json`). Any

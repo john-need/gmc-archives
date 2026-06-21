@@ -16,10 +16,12 @@ Source item from the GMC archive (spec: "Archive Document").
 | `title` | string | Required (FR-002) |
 | `section` | string | GMC section name (FR-002) |
 | `date` | ISO date string | Required (FR-002) |
-| `sourceFormat` | `"pdf" \| "scanned-image" \| "text"` | Drives OCR path (FR-002a) |
+| `sourceFormat` | `"pdf" \| "scanned-image" \| "text" \| "markdown"` | Drives OCR path and download `Content-Type` (FR-002a, FR-014); `"text"` → `text/plain`, `"markdown"` → `text/markdown`, `"scanned-image"` retains its original image MIME type (e.g., `image/jpeg`, `image/png`, `image/tiff`) read from the uploaded file rather than being normalized to one type, `"pdf"` → `application/pdf` |
 | `storageObjectPath` | string | Cloud Storage object path; new version on republish (FR-007a) |
 | `version` | integer | Increments on each republish (FR-007a) |
 | `metadataComplete` | boolean | Derived; false triggers the "missing/malformed metadata" acceptance scenario (User Story 1, #2) |
+
+**Resolves E1/E2 (speckit-analyze)**: `"text"` and `"markdown"` are distinct `sourceFormat` values (not collapsed), and `resolveContentType` (tasks.md T059) is a total function over all four values plus the scanned image's stored original MIME type — no fallback/default case is needed.
 
 ## OkfRecord
 

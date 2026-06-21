@@ -32,9 +32,9 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 **Purpose**: Project initialization and tooling per the user's explicit stack/tooling requirements (research.md §10–§11)
 
 - [ ] T001 Create project directory structure: `src/lib/{auth,conversion,storage,catalog,search}`, `src/cli`, `src/backend/{routes,ingestion,middleware,store}`, `src/app/{routes,components,store,queries}`, `tests/{contract,integration,component,e2e}`
-- [ ] T002 Initialize `package.json` with TypeScript, React 18, Redux Toolkit, TanStack Query, Ramda, `react-router-dom`, a minimal Node HTTP framework for `src/backend`, Google Cloud client libraries (Storage, Pub/Sub, Document AI, vector search), Jest, `ts-jest`, `@testing-library/react`, Playwright, ESLint + `@typescript-eslint`
+- [ ] T002 Initialize `package.json` with TypeScript, React 18, Redux Toolkit, TanStack Query, Ramda, `react-router-dom`, a minimal Node HTTP framework for `src/backend`, Google Cloud client libraries (Storage, Pub/Sub, Document AI, vector search), Jest, `ts-jest`, `@testing-library/react`, `jest-axe` and `@axe-core/playwright` (constitution §Accessibility), Playwright, ESLint + `@typescript-eslint`
 - [ ] T003 [P] Configure `tsconfig.json`: `strict: true`, `noImplicitAny: true`, target ES2020, `paths` mapping `@/*` → `src/*` (research.md §11)
-- [ ] T004 [P] Configure `jest.config.ts`: `moduleNameMapper` for `^@/(.*)$` → `<rootDir>/src/$1`, TypeScript transform, separate `jsdom`/`node` test environments for `src/app` vs. `src/lib`/`src/backend` (research.md §11)
+- [ ] T004 [P] Configure `jest.config.ts`: `moduleNameMapper` for `^@/(.*)$` → `<rootDir>/src/$1`, TypeScript transform, separate `jsdom`/`node` test environments for `src/app` vs. `src/lib`/`src/backend`, and `coverageThreshold: { global: { branches: 90, functions: 90, lines: 90, statements: 90 } }` per constitution §"Test First Development" (research.md §11)
 - [ ] T005 [P] Configure `.eslintrc.cjs`: `quotes: ["error", "double"]`, `comma-dangle: ["error", "never"]`, `semi: ["error", "always"]`, `curly: ["error", "all"]`, `@typescript-eslint/no-explicit-any: "error"` (research.md §10)
 - [ ] T006 [P] Configure `playwright.config.ts` targeting `tests/e2e`
 
@@ -84,7 +84,7 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 - [ ] T029 [P] [US1] Contract test `POST /api/documents/:id/convert` (success, `INCOMPLETE_METADATA`, `UNSUPPORTED_FORMAT`) in `tests/contract/convert.contract.ts`
 - [ ] T030 [P] [US1] Contract test `POST /api/batches` including the 50-document cap (FR-011) in `tests/contract/batches.contract.ts`
 - [ ] T031 [P] [US1] Integration test: end-to-end conversion through the fakes (upload → queue → process → `OkfRecord` with `author`/`location`/`entities`) in `tests/integration/convert.integration.ts`
-- [ ] T032 [P] [US1] Component test for the document browser view (list, select, initiate conversion, missing-metadata error display) in `tests/component/DocumentBrowser.test.tsx`
+- [ ] T032 [P] [US1] Component test for the document browser view (list, select, initiate conversion, missing-metadata error display, keyboard navigation through the list, accessible names/ARIA roles on all interactive elements) in `tests/component/DocumentBrowser.test.tsx` (constitution §Accessibility)
 
 ### Implementation for User Story 1
 
@@ -94,9 +94,9 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 - [ ] T036 [US1] Implement the conversion orchestration (imperative shell composing T033/T034 with `DocumentStorage`/`IngestionQueue`/`DocumentProcessor`) in `src/backend/ingestion/conversionHandler.ts` (depends on T033–T034, T013–T014/T017/T019)
 - [ ] T037 [US1] Implement batch-creation handling (using T035) in `src/backend/routes/batches.ts` (depends on T035)
 - [ ] T038 [US1] Implement `GET /api/documents`, `GET /api/documents/:id`, `POST /api/documents/:id/convert` in `src/backend/routes/documents.ts` (depends on T036)
-- [ ] T039 [US1] Implement `GET /api/batches/:batchId` status endpoint in `src/backend/routes/batches.ts` (depends on T037)
+- [ ] T039 [US1] Implement `GET /api/batches/:batchId` status endpoint in `src/backend/routes/batches.ts` (extends T037's file; depends on T037)
 - [ ] T040 [P] [US1] Implement `useDocuments`/`useConvertDocument` TanStack Query hooks in `src/app/queries/useDocuments.ts`
-- [ ] T041 [P] [US1] Implement `documentsSlice` (Redux Toolkit, immutable updates) for selection state in `src/app/store/documentsSlice.ts`
+- [ ] T041 [P] [US1] Implement `documentsSlice` (Redux Toolkit) for selection state in `src/app/store/documentsSlice.ts`; actions MUST be plain objects, reducers MUST be pure functions per constitution §Redux — note in a code comment that RTK's Immer-backed draft-mutation syntax is the one documented exception to the no-mutation rule, since it preserves the pure-reducer contract (tasks.md preamble, "Paradigm note")
 - [ ] T042 [US1] Implement the `DocumentBrowser` view (function component) in `src/app/routes/DocumentBrowser.tsx` (depends on T040–T041; makes T032 pass)
 - [ ] T043 [US1] Implement the `BatchStatusDashboard` view, read-only per-document status list, in `src/app/routes/BatchStatusDashboard.tsx` (depends on T039)
 - [ ] T044 [P] [US1] Implement CLI `convert` and `batch-convert` commands in `src/cli/commands/convert.ts` (Principle II; depends on T036–T037)
@@ -140,7 +140,7 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 
 - [ ] T054 [P] [US3] Contract test `GET /api/catalog/search` (semantic ranking, structured filters, empty results) in `tests/contract/catalog-search.contract.ts`
 - [ ] T055 [P] [US3] Contract test `GET /api/documents/:id/download` (original format preserved, `SOURCE_UNAVAILABLE`) in `tests/contract/download.contract.ts`
-- [ ] T056 [P] [US3] Component test for the `CatalogSearch` view (query input, filters, results, empty state, download action) in `tests/component/CatalogSearch.test.tsx`
+- [ ] T056 [P] [US3] Component test for the `CatalogSearch` view (query input, filters, results, empty state, download action, keyboard-operable search/filter controls, accessible names/ARIA roles) in `tests/component/CatalogSearch.test.tsx` (constitution §Accessibility)
 
 ### Implementation for User Story 3
 
@@ -166,7 +166,7 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 ### Tests for User Story 4 ⚠️ write first, confirm failing
 
 - [ ] T065 [P] [US4] Contract test `GET /api/documents/:id/discoverability` (`"pending"` → `"discoverable"`) in `tests/contract/discoverability.contract.ts`
-- [ ] T066 [P] [US4] Component test for the discoverability status badge in `tests/component/DiscoverabilityBadge.test.tsx`
+- [ ] T066 [P] [US4] Component test for the discoverability status badge (accessible name conveys "pending" vs. "discoverable" to assistive tech, not color alone) in `tests/component/DiscoverabilityBadge.test.tsx` (constitution §Accessibility)
 
 ### Implementation for User Story 4
 
@@ -192,7 +192,9 @@ Per plan.md's Project Structure: `src/lib/**` (framework-agnostic domain library
 - [ ] T077 [P] Playwright e2e: role enforcement, batch cap, and retry flows (quickstart.md scenario 5) in `tests/e2e/roles-and-batches.spec.ts`
 - [ ] T078 [P] Verify Cloud Monitoring-visible structured logs across all backend routes and the Pub/Sub subscriber, with request-id correlation, in `src/backend/middleware/requestLogging.ts` (research.md §7)
 - [ ] T079 Security hardening pass: confirm no Google credentials/env secrets are referenced from `src/app`, CORS restricted to the app's own origin, session cookies `httpOnly`/`secure` in `src/backend/app.ts`
-- [ ] T080 Run quickstart.md validation end-to-end against a real or sandboxed Google Cloud project; record results
+- [ ] T080 [P] Accessibility audit across all four views (`DocumentBrowser`, `BatchStatusDashboard`, `CatalogSearch`, `PublicationHistory`): automated `jest-axe`/Playwright-axe scan plus manual keyboard-only navigation and color-contrast check; file and fix any findings (constitution §Accessibility — "regular accessibility audits MUST be conducted")
+- [ ] T081 [P] Quality-gate check: run `npm test -- --coverage` and confirm the `coverageThreshold` configured in T004 (≥90% branches/functions/lines/statements) passes; wire this check into the CI/merge gate (constitution §"Test First Development", Development Workflow)
+- [ ] T082 Run quickstart.md validation end-to-end against a real or sandboxed Google Cloud project; record results
 
 ---
 

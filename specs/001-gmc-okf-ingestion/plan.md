@@ -93,6 +93,20 @@ No unjustified violations — see Complexity Tracking for the one deliberate
 deviation (adding a backend to an otherwise "standalone" SPA) and its
 rationale.
 
+**Documented Library-First exception (speckit-analyze F1)**: the
+`IngestionQueue` (Pub/Sub) interface and its fake live under
+`src/backend/ingestion/`, not `src/lib/**`, unlike the other three Google
+services adapters (`DocumentStorage`, `DocumentProcessor`,
+`SemanticIndex`). This is intentional, not an oversight: `IngestionQueue`'s
+subscriber side is inherently tied to the App Engine backend's request
+lifecycle (it is *how* `src/backend` dispatches work to itself
+asynchronously), so it has no meaningful standalone use outside the
+backend the way the other adapters do (which are also called directly by
+the CLI). The interface is still defined as a pure contract and given a
+fake for contract tests (contracts/google-services-adapter.md), satisfying
+the *testability* intent of Library-First even though the module lives
+under `src/backend`.
+
 ## Project Structure
 
 ### Documentation (this feature)

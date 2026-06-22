@@ -47,7 +47,11 @@
       "Bash(pkill -f vite)",
       "Bash(awk '/File.*% Stmts/,/-----------------------------------\\\\|---------\\\\|----------\\\\|---------\\\\|---------\\\\|/' /tmp/cov2.log)",
       "Bash(awk '/app\\\\/routes/{f=1} f{print} f && /^ [a-zA-Z]/ && !/app\\\\/routes/{f=0}' /tmp/cov2.log)",
-      "Bash(grep *)"
+      "Bash(grep *)",
+      "Bash(awk '{ print length, NR }' \"GMC Burlington Archive.html\")",
+      "Bash(git rm *)",
+      "Bash(npm test *)",
+      "Bash(echo \"exit=$?\")"
     ]
   }
 }

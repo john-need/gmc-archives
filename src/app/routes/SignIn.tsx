@@ -18,7 +18,7 @@ export function SignIn(props: SignInProps): JSX.Element {
       <div style={{ width: "100%", maxWidth: 430 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 30 }}>
           <img src="/gmc-btv-logo.png" alt="Green Mountain Club" width={52} height={52} style={{ display: "block", objectFit: "contain" }} />
-          <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: "-.01em" }}>GMC&#8202;·&#8202;Burlington Historical Archive</span>
+          <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: "-.01em" }}>GMC · Burlington Historical Archive</span>
         </div>
         <div
           style={{
@@ -62,7 +62,7 @@ export function SignIn(props: SignInProps): JSX.Element {
             Continue with Google
           </button>
           <p style={{ margin: "18px 0 0", fontSize: "12.5px", color: "#A79D90", lineHeight: 1.5, textAlign: "center" }}>
-            Single sign-on &middot; Your role is set by your workspace admin
+            Single sign-on · Your role is set by your workspace admin
           </p>
           <div
             style={{

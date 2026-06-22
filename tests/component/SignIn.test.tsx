@@ -49,12 +49,13 @@ describe("RequestAccess", () => {
     const user = userEvent.setup();
     await user.type(screen.getByLabelText(/name/i), "A One");
     await user.type(screen.getByLabelText(/email/i), "a@example.org");
+    await user.type(screen.getByLabelText(/affiliation/i), "GMC Burlington");
     await user.type(screen.getByLabelText(/reason/i), "Local history research");
     await user.click(screen.getByRole("button", { name: /submit request/i }));
     expect(onSubmit).toHaveBeenCalledWith({
       name: "A One",
       email: "a@example.org",
-      affiliation: "",
+      affiliation: "GMC Burlington",
       reason: "Local history research"
     });
   });
@@ -63,6 +64,11 @@ describe("RequestAccess", () => {
     renderForm({ submitted: true, submittedName: "A One" });
     expect(screen.getByText(/a one/i)).toBeInTheDocument();
     expect(screen.getByText(/request submitted/i)).toBeInTheDocument();
+  });
+
+  it("falls back to a generic greeting when no submitted name is known", () => {
+    renderForm({ submitted: true, submittedName: undefined });
+    expect(screen.getByText(/thanks, there/i)).toBeInTheDocument();
   });
 
   it("has no accessibility violations", async () => {

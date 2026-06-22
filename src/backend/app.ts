@@ -53,7 +53,7 @@ export function createApp(deps: AppDeps): Express {
   });
 
   app.use(createSessionMiddleware(deps.authProvider));
-  app.use(createSessionRoutes());
+  app.use(createSessionRoutes(deps.authProvider));
 
   app.use(["/api/batches", "/api/documents/:id/convert", "/api/documents/:id/publish", "/api/documents/:id/retry"], requireRole("publisher"));
 

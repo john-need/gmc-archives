@@ -28,9 +28,27 @@ export function ToastProvider(props: { children: ReactNode }): JSX.Element {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {props.children}
-      <div aria-live="polite" style={{ position: "fixed", bottom: 16, left: "50%", transform: "translateX(-50%)" }}>
+      <div aria-live="polite" style={{ position: "fixed", bottom: 26, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", gap: 8, zIndex: 60 }}>
         {toasts.map((toast) => (
-          <div key={toast.id} role="status">
+          <div
+            key={toast.id}
+            role="status"
+            style={{
+              background: "#2A2520",
+              color: "#FBF8F3",
+              padding: "11px 20px",
+              borderRadius: 999,
+              fontSize: "13.5px",
+              fontWeight: 500,
+              boxShadow: "0 12px 30px rgba(40,25,15,.3)",
+              display: "flex",
+              alignItems: "center",
+              gap: 9
+            }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A6BE82" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="m5 12 5 5L20 7" />
+            </svg>
             {toast.message}
           </div>
         ))}

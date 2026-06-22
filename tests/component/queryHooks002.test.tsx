@@ -3,7 +3,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { useAsk } from "@/app/queries/useAsk";
 import { useFavorites, useToggleFavorite } from "@/app/queries/useFavorites";
-import { useSession } from "@/app/queries/useSession";
+import { useSession, useSignIn, useSignOut } from "@/app/queries/useSession";
+import { getAuthToken, setAuthToken } from "@/app/auth/authToken";
 import {
   useDecideAccessRequest,
   usePendingAccessRequests,
@@ -25,6 +26,7 @@ function mockFetchOnce(status: number, body: unknown): void {
 
 beforeEach(() => {
   global.fetch = jest.fn();
+  localStorage.clear();
 });
 
 describe("useAsk", () => {
@@ -97,6 +99,27 @@ describe("useSession", () => {
     const { result } = renderHook(() => useSession(), { wrapper });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toBeNull();
+  });
+});
+
+describe("useSignIn / useSignOut", () => {
+  it("stores the returned token and invalidates the session query on sign-in", async () => {
+    mockFetchOnce(200, { token: "abc123", user: { id: "u1", role: "viewer", identityProvider: "google" } });
+    const { result } = renderHook(() => useSignIn(), { wrapper });
+    result.current.mutate();
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(global.fetch).toHaveBeenCalledWith("/api/session", { method: "POST" });
+    expect(getAuthToken()).toBe("abc123");
+  });
+
+  it("clears the stored token and the query cache on sign-out", async () => {
+    setAuthToken("abc123");
+    mockFetchOnce(204, {});
+    const { result } = renderHook(() => useSignOut(), { wrapper });
+    result.current.mutate();
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(global.fetch).toHaveBeenCalledWith("/api/session", { method: "DELETE" });
+    expect(getAuthToken()).toBeNull();
   });
 });
 

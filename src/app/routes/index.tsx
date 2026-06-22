@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { SideNav } from "@/app/components/SideNav";
 import { ToastProvider, useToast } from "@/app/components/Toast";
 import { DocumentViewerModal } from "@/app/components/DocumentViewerModal";
-import { useSession } from "@/app/queries/useSession";
+import { useSession, useSignIn, useSignOut } from "@/app/queries/useSession";
 import { useArchiveDocument, useDocuments } from "@/app/queries/useDocuments";
 import { useFavorites, useToggleFavorite } from "@/app/queries/useFavorites";
 import { useDownloadDocument } from "@/app/queries/useCatalog";
@@ -216,16 +215,15 @@ function UploadContainer(): JSX.Element {
 
 function SignInContainer(): JSX.Element {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const signIn = useSignIn();
 
   return (
     <SignIn
-      // ponytail: no real OAuth entry point exists yet — the browser never
-      // holds Google credentials (FR-008), and feature 001 never built a
-      // sign-in-initiation endpoint, only GET /api/session to check an
-      // existing one. Re-checking the session here picks up a real session
-      // once that backend redirect/token-exchange flow is added.
-      onSignIn={() => void queryClient.invalidateQueries({ queryKey: ["session"] })}
+      // ponytail: the browser never holds a real Google credential here
+      // (FR-008) — POST /api/session mints a session against whichever
+      // AuthProvider is wired in (fake in dev, real once a live GCP project
+      // completes the OAuth handshake).
+      onSignIn={() => signIn.mutate()}
       onGoToRequestAccess={() => navigate("/request-access")}
     />
   );
@@ -268,7 +266,7 @@ function AccessRequestReviewContainer(): JSX.Element {
 
 export function AppRoutes(): JSX.Element {
   const { data: user, isLoading } = useSession();
-  const queryClient = useQueryClient();
+  const signOut = useSignOut();
 
   if (isLoading) {
     return <div>Loading…</div>;
@@ -285,8 +283,8 @@ export function AppRoutes(): JSX.Element {
 
   return (
     <ToastProvider>
-      <div style={{ display: "flex" }}>
-        <SideNav user={user} onSignOut={() => queryClient.clear()} />
+      <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "#F4F0E9" }}>
+        <SideNav user={user} onSignOut={() => signOut.mutate()} />
         <Routes>
           <Route path="/" element={<AskSearchContainer />} />
           <Route path="/library" element={<LibraryContainer />} />

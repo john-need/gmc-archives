@@ -20,6 +20,7 @@ class FakeXMLHttpRequest {
 
   open(): void {}
   send(): void {}
+  setRequestHeader(): void {}
 
   addEventListener(event: string, listener: Listener): void {
     this.listeners[event] = [...(this.listeners[event] ?? []), listener];

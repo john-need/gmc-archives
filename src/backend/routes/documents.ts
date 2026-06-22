@@ -1,9 +1,13 @@
 import { Router } from "express";
+import multer from "multer";
 import type { DocumentStorage } from "@/lib/storage/documentStorage";
 import type { DocumentProcessor } from "@/lib/conversion/documentProcessor";
 import type { IngestionQueue } from "@/backend/ingestion/ingestionQueue";
 import type { MemoryStore } from "@/backend/store/memoryStore";
 import { attemptConversion } from "@/backend/ingestion/conversionHandler";
+import { uploadHandler, type UploadHandlerDeps } from "@/backend/ingestion/uploadHandler";
+import { MAX_UPLOAD_SIZE_BYTES } from "@/lib/conversion/validateUploadFile";
+import { requireRole } from "@/backend/middleware/requireRole";
 
 export interface DocumentsRoutesDeps {
   store: MemoryStore;
@@ -11,6 +15,8 @@ export interface DocumentsRoutesDeps {
   documentProcessor: DocumentProcessor;
   ingestionQueue: IngestionQueue;
 }
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: MAX_UPLOAD_SIZE_BYTES + 1 } });
 
 export function createDocumentsRoutes(deps: DocumentsRoutesDeps): Router {
   const router = Router();
@@ -51,6 +57,42 @@ export function createDocumentsRoutes(deps: DocumentsRoutesDeps): Router {
     );
     res.status(outcome.httpStatus).json(outcome.body);
   });
+
+  return router;
+}
+
+export function createDocumentUploadRoutes(deps: UploadHandlerDeps): Router {
+  const router = Router();
+
+  router.post(
+    "/api/documents",
+    requireRole("publisher"),
+    (req, res, next) => {
+      upload.single("file")(req, res, (error: unknown) => {
+        if (error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE") {
+          res.status(422).json({ error: "FILE_TOO_LARGE", maxBytes: MAX_UPLOAD_SIZE_BYTES });
+          return;
+        }
+        if (error) {
+          next(error);
+          return;
+        }
+        next();
+      });
+    },
+    async (req, res) => {
+      if (req.file === undefined) {
+        res.status(422).json({ error: "UNSUPPORTED_FORMAT" });
+        return;
+      }
+      const outcome = await uploadHandler(
+        { buffer: req.file.buffer, filename: req.file.originalname, sizeBytes: req.file.size },
+        { title: req.body?.title, section: req.body?.section },
+        deps
+      );
+      res.status(outcome.httpStatus).json(outcome.body);
+    }
+  );
 
   return router;
 }

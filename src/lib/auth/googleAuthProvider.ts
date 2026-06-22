@@ -1,4 +1,5 @@
 import type { AuthProvider, AuthSession } from "@/lib/auth/authProvider";
+import type { UserDirectory } from "@/lib/access/userDirectory";
 import type { User, UserRole } from "@/lib/types";
 
 export interface GoogleAuthProviderOptions {
@@ -9,6 +10,13 @@ export interface GoogleAuthProviderOptions {
   // project is available (research.md §6).
   stubBackend?: boolean;
   roleAllowlist?: Record<string, UserRole>;
+  // When provided, role resolution is delegated to the UserDirectory
+  // (FR-018/FR-019: only emails approved via the access-request workflow
+  // resolve to a role; anyone else is treated as unprovisioned rather than
+  // defaulting to "viewer"). Absent userDirectory preserves the prior
+  // default-to-viewer behavior for backward compatibility.
+  userDirectory?: UserDirectory;
+  email?: string;
 }
 
 export function createGoogleAuthProvider(options: GoogleAuthProviderOptions = {}): AuthProvider {
@@ -21,7 +29,7 @@ export function createGoogleAuthProvider(options: GoogleAuthProviderOptions = {}
 
   return {
     async signIn(): Promise<AuthSession> {
-      const subjectId = `google-subject-${activeSessions.size + 1}`;
+      const subjectId = options.email ?? `google-subject-${activeSessions.size + 1}`;
       const token = `token-${subjectId}`;
       activeSessions.set(token, subjectId);
       return { token, provider: "google" };
@@ -36,6 +44,13 @@ export function createGoogleAuthProvider(options: GoogleAuthProviderOptions = {}
       const subjectId = activeSessions.get(session.token);
       if (subjectId === undefined) {
         return null;
+      }
+      if (options.userDirectory !== undefined) {
+        const role = await options.userDirectory.getRole(subjectId);
+        if (role === null) {
+          return null;
+        }
+        return { id: subjectId, role, identityProvider: "google" };
       }
       const role = roleAllowlist[subjectId] ?? "viewer";
       return { id: subjectId, role, identityProvider: "google" };

@@ -11,7 +11,7 @@ description: "Task list for Knowledge Catalog Redesign"
 
 **Tests**: Included for every task group — TDD is mandatory per Constitution Principle III, continuing feature 001's established discipline. Every test task MUST be written and confirmed failing before its corresponding implementation task.
 
-**Paradigm note**: Continues feature 001's functional-core/imperative-shell split. New pure logic (`buildGroundingSources`, `deriveCollections`, `toggleFavorite`, `accessRequestDecision`, `validateUploadFile`, `inferSourceFormatFromFilename`) lives in `src/lib/**` and is unit-tested without mocks; new I/O (`askHandler`, `uploadHandler`, the new routes, the real Vertex/mammoth/xlsx adapters) is the thin imperative shell. `conversationSlice` is the one new Redux slice (ephemeral client-only chat state); favorites and access requests are server-authoritative and managed via TanStack Query, matching how feature 001 already treats `CatalogEntry`/`OkfRecord` server state — no Redux duplication of server state. Ramda is used for the new list/derivation logic (`deriveCollections`).
+**Paradigm note**: Continues feature 001's functional-core/imperative-shell split. New pure logic (`buildGroundingSources`, `deriveCollections`, `toggleFavorite`, `accessRequestDecision`, `validateUploadFile`, `inferSourceFormatFromFilename`) lives in `src/lib/**` and is unit-tested without mocks; new I/O (`askHandler`, `uploadHandler`, the new routes, the real Vertex/mammoth/exceljs adapters) is the thin imperative shell. `conversationSlice` is the one new Redux slice (ephemeral client-only chat state); favorites and access requests are server-authoritative and managed via TanStack Query, matching how feature 001 already treats `CatalogEntry`/`OkfRecord` server state — no Redux duplication of server state. Ramda is used for the new list/derivation logic (`deriveCollections`).
 
 **Organization**: Tasks are grouped by user story (spec.md priorities P1–P3) to enable independent implementation and testing of each story, exactly as feature 001's tasks.md does.
 
@@ -37,8 +37,8 @@ established there).
 
 **Purpose**: New dependencies this feature needs beyond feature 001's stack (research.md §1–§2, contracts/bff-api.md's multipart upload)
 
-- [ ] T001 Add `@google-cloud/vertexai`, `mammoth`, `xlsx`, `multer` to `package.json` dependencies and `@types/multer` to devDependencies
-- [ ] T002 `npm install`; confirm `npm run typecheck` and `npm run lint` still pass against feature 001's existing code with no changes yet
+- [X] T001 Add `@google-cloud/vertexai`, `mammoth`, `exceljs`, `multer` to `package.json` dependencies and `@types/multer` to devDependencies (substituted `exceljs` for the originally planned `xlsx` after discovering unpatched CVEs — research.md §2)
+- [X] T002 `npm install`; confirm `npm run typecheck` and `npm run lint` still pass against feature 001's existing code with no changes yet
 
 ---
 
@@ -48,19 +48,19 @@ established there).
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 [P] Define `Favorite` and `AccessRequest` types in `src/lib/types.ts` (data-model.md)
-- [ ] T004 [P] Implement `FavoritesStore` interface in `src/lib/favorites/favoritesStore.ts` (contracts/favorites-store.md)
-- [ ] T005 [P] Contract test for `FavoritesStore` in `tests/contract/favorites-store.contract.ts` (contracts/favorites-store.md) — write first, confirm it fails
-- [ ] T006 Implement `fakeFavoritesStore` in `src/lib/favorites/fakeFavoritesStore.ts` (makes T005 pass; depends on T004)
-- [ ] T007 Extend `MemoryStore` with a `favorites: Map<string, Set<string>>` map in `src/backend/store/memoryStore.ts` (data-model.md)
-- [ ] T008 [P] Implement pure `toggleFavorite(isFavorited): { action: "add" | "remove" }` decision in `src/lib/favorites/toggleFavorite.ts`
-- [ ] T009 [P] Contract test for `GET/POST/DELETE /api/favorites` in `tests/contract/favorites.contract.ts` (contracts/bff-api.md) — write first, confirm it fails
-- [ ] T010 Implement favorites routes in `src/backend/routes/favorites.ts` (makes T009 pass; depends on T006–T008)
-- [ ] T011 [P] Implement `useFavorites` TanStack Query hooks (list/add/remove) in `src/app/queries/useFavorites.ts`
-- [ ] T012 [P] Implement `Toast` component (local-state, auto-dismissing message queue per FR-011) in `src/app/components/Toast.tsx`
-- [ ] T013 [P] Implement accessible `DocumentViewerModal` component (`role="dialog"`, focus trap, Escape-to-close per research.md §5; degrades to a "no longer available" state rather than erroring if its document is missing/deleted, per spec.md edge cases) in `src/app/components/DocumentViewerModal.tsx`
-- [ ] T014 [P] Implement `SideNav` component (Ask & Search / Library / Favorites / permission-gated Upload, user name + role label, sign-out) in `src/app/components/SideNav.tsx`
-- [ ] T015 Rewire `src/app/routes/index.tsx`: mount `SideNav` as the persistent app shell and add route placeholders for `AskSearch` (default), `Library`, `Favorites`, `Upload`, `SignIn`, `RequestAccess`, `AccessRequestReview` (depends on T014)
+- [X] T003 [P] Define `Favorite` and `AccessRequest` types in `src/lib/types.ts` (data-model.md)
+- [X] T004 [P] Implement `FavoritesStore` interface in `src/lib/favorites/favoritesStore.ts` (contracts/favorites-store.md)
+- [X] T005 [P] Contract test for `FavoritesStore` in `tests/contract/favorites-store.contract.ts` (contracts/favorites-store.md) — write first, confirm it fails
+- [X] T006 Implement `fakeFavoritesStore` in `src/lib/favorites/fakeFavoritesStore.ts` (makes T005 pass; depends on T004)
+- [X] T007 Extend `MemoryStore` with a `favorites: Map<string, Set<string>>` map in `src/backend/store/memoryStore.ts` (data-model.md)
+- [X] T008 [P] Implement pure `toggleFavorite(isFavorited): { action: "add" | "remove" }` decision in `src/lib/favorites/toggleFavorite.ts`
+- [X] T009 [P] Contract test for `GET/POST/DELETE /api/favorites` in `tests/contract/favorites.contract.ts` (contracts/bff-api.md) — write first, confirm it fails
+- [X] T010 Implement favorites routes in `src/backend/routes/favorites.ts` (makes T009 pass; depends on T006–T008)
+- [X] T011 [P] Implement `useFavorites` TanStack Query hooks (list/add/remove) in `src/app/queries/useFavorites.ts`
+- [X] T012 [P] Implement `Toast` component (local-state, auto-dismissing message queue per FR-011) in `src/app/components/Toast.tsx`
+- [X] T013 [P] Implement accessible `DocumentViewerModal` component (`role="dialog"`, focus trap, Escape-to-close per research.md §5; degrades to a "no longer available" state rather than erroring if its document is missing/deleted, per spec.md edge cases) in `src/app/components/DocumentViewerModal.tsx`
+- [X] T014 [P] Implement `SideNav` component (Ask & Search / Library / Favorites / permission-gated Upload, user name + role label, sign-out) in `src/app/components/SideNav.tsx`
+- [X] T015 Rewire `src/app/routes/index.tsx`: mount `SideNav` as the persistent app shell and add route placeholders for `AskSearch` (default), `Library`, `Favorites`, `Upload`, `SignIn`, `RequestAccess`, `AccessRequestReview` (depends on T014)
 
 **Checkpoint**: Foundation ready — user story implementation can now begin
 
@@ -74,24 +74,24 @@ established there).
 
 ### Tests for User Story 1 ⚠️ write first, confirm failing
 
-- [ ] T016 [P] [US1] Contract test for `GenerativeAnswerModel` in `tests/contract/generative-answer-model.contract.ts` (contracts/generative-answer-model.md)
-- [ ] T017 [P] [US1] Contract test `POST /api/ask` (success with sources, empty-sources best-effort answer, `ASK_FAILED`) in `tests/contract/ask.contract.ts` (contracts/bff-api.md)
-- [ ] T018 [P] [US1] Integration test: end-to-end ask through the fakes (retrieval → generation → citations → `QaLogEntry` emitted per FR-004b) in `tests/integration/ask.integration.ts`
-- [ ] T019 [P] [US1] Component test for the `AskSearch` view (welcome state + suggested prompts, send, sources panel, "New chat", inline error + retry, keyboard operability, ARIA roles, and that submitting a second question while `thinking` is true is blocked/queued rather than interleaving two answers — spec.md edge case) in `tests/component/AskSearch.test.tsx` (constitution §Accessibility)
+- [X] T016 [P] [US1] Contract test for `GenerativeAnswerModel` in `tests/contract/generative-answer-model.contract.ts` (contracts/generative-answer-model.md)
+- [X] T017 [P] [US1] Contract test `POST /api/ask` (success with sources, empty-sources best-effort answer, `ASK_FAILED`) in `tests/contract/ask.contract.ts` (contracts/bff-api.md)
+- [X] T018 [P] [US1] Integration test: end-to-end ask through the fakes (retrieval → generation → citations → `QaLogEntry` emitted per FR-004b) in `tests/integration/ask.integration.ts`
+- [X] T019 [P] [US1] Component test for the `AskSearch` view (welcome state + suggested prompts, send, sources panel, "New chat", inline error + retry, keyboard operability, ARIA roles, and that submitting a second question while `thinking` is true is blocked/queued rather than interleaving two answers — spec.md edge case) in `tests/component/AskSearch.test.tsx` (constitution §Accessibility)
 
 ### Implementation for User Story 1
 
-- [ ] T020 [P] [US1] Implement `GenerativeAnswerModel` interface in `src/lib/search/generativeAnswerModel.ts` (contracts/generative-answer-model.md)
-- [ ] T021 [P] [US1] Implement `fakeGenerativeAnswerModel` in `src/lib/search/fakeGenerativeAnswerModel.ts` (deterministic output per source set; makes T016 pass)
-- [ ] T022 [P] [US1] Implement pure `buildGroundingSources(catalogEntries, okfRecords): GroundingSource[]` in `src/lib/search/buildGroundingSources.ts`
-- [ ] T023 [US1] Implement `askHandler` orchestration (semanticSearch → buildGroundingSources → model.generate → emit `QaLogEntry` via `emitLogEntry` → shape `{answer, sources}`; catches model/retrieval failure → `ASK_FAILED`) in `src/backend/ingestion/askHandler.ts` (depends on T020–T022)
-- [ ] T024 [US1] Implement `POST /api/ask` route in `src/backend/routes/ask.ts` (makes T017 pass; depends on T023)
-- [ ] T025 [P] [US1] Implement `conversationSlice` (Redux: `messages`, `draft`, `thinking`; the `send` action/thunk is a no-op while `thinking` is already true, guaranteeing no interleaved answers) in `src/app/store/conversationSlice.ts`
-- [ ] T026 [P] [US1] Implement `useAsk` TanStack Query mutation hook in `src/app/queries/useAsk.ts`
-- [ ] T027 [US1] Implement the `AskSearch` view (function component) in `src/app/routes/AskSearch.tsx` (depends on T025–T026, T012–T013; makes T019 pass)
-- [ ] T028 [US1] Wire `AskSearch` as the default route in `src/app/routes/index.tsx` (depends on T015, T027)
-- [ ] T029 [P] [US1] Implement real `vertexGenerativeAnswerModel` in `src/lib/search/vertexGenerativeAnswerModel.ts` (research.md §1; not exercised against a live project in this pass)
-- [ ] T030 [P] [US1] Implement CLI `ask` command in `src/cli/commands/ask.ts` (Principle II)
+- [X] T020 [P] [US1] Implement `GenerativeAnswerModel` interface in `src/lib/search/generativeAnswerModel.ts` (contracts/generative-answer-model.md)
+- [X] T021 [P] [US1] Implement `fakeGenerativeAnswerModel` in `src/lib/search/fakeGenerativeAnswerModel.ts` (deterministic output per source set; makes T016 pass)
+- [X] T022 [P] [US1] Implement pure `buildGroundingSources(catalogEntries, okfRecords): GroundingSource[]` in `src/lib/search/buildGroundingSources.ts`
+- [X] T023 [US1] Implement `askHandler` orchestration (semanticSearch → buildGroundingSources → model.generate → emit `QaLogEntry` via `emitLogEntry` → shape `{answer, sources}`; catches model/retrieval failure → `ASK_FAILED`) in `src/backend/ingestion/askHandler.ts` (depends on T020–T022)
+- [X] T024 [US1] Implement `POST /api/ask` route in `src/backend/routes/ask.ts` (makes T017 pass; depends on T023)
+- [X] T025 [P] [US1] Implement `conversationSlice` (Redux: `messages`, `draft`, `thinking`; the `send` action/thunk is a no-op while `thinking` is already true, guaranteeing no interleaved answers) in `src/app/store/conversationSlice.ts`
+- [X] T026 [P] [US1] Implement `useAsk` TanStack Query mutation hook in `src/app/queries/useAsk.ts`
+- [X] T027 [US1] Implement the `AskSearch` view (function component) in `src/app/routes/AskSearch.tsx` (depends on T025–T026, T012–T013; makes T019 pass)
+- [X] T028 [US1] Wire `AskSearch` as the default route in `src/app/routes/index.tsx` (depends on T015, T027)
+- [X] T029 [P] [US1] Implement real `vertexGenerativeAnswerModel` in `src/lib/search/vertexGenerativeAnswerModel.ts` (research.md §1; not exercised against a live project in this pass)
+- [X] T030 [P] [US1] Implement CLI `ask` command in `src/cli/commands/ask.ts` (Principle II)
 
 **Checkpoint**: User Story 1 is fully functional and testable independently (MVP)
 
@@ -105,14 +105,14 @@ established there).
 
 ### Tests for User Story 2 ⚠️ write first, confirm failing
 
-- [ ] T031 [P] [US2] Unit test for `deriveCollections` in `tests/unit/deriveCollections.test.ts`
-- [ ] T032 [P] [US2] Component test for the `Library` view (free-text + collection filtering, grid/list toggle, view/favorite actions, no-results state, keyboard operability, ARIA roles, and that the download action requests the document's original format/content-type unchanged per FR-015) in `tests/component/Library.test.tsx` (constitution §Accessibility)
+- [X] T031 [P] [US2] Unit test for `deriveCollections` in `tests/unit/deriveCollections.test.ts`
+- [X] T032 [P] [US2] Component test for the `Library` view (free-text + collection filtering, grid/list toggle, view/favorite actions, no-results state, keyboard operability, ARIA roles, and that the download action requests the document's original format/content-type unchanged per FR-015) in `tests/component/Library.test.tsx` (constitution §Accessibility)
 
 ### Implementation for User Story 2
 
-- [ ] T033 [P] [US2] Implement pure `deriveCollections(documents): string[]` (Ramda `pipe`/`uniq`/`sortBy`) in `src/lib/catalog/deriveCollections.ts` (makes T031 pass)
-- [ ] T034 [US2] Implement the `Library` view in `src/app/routes/Library.tsx` (uses existing `useDocuments`, `useFavorites` from T011, `DocumentViewerModal` from T013, `deriveCollections`) (depends on T033; makes T032 pass)
-- [ ] T035 [US2] Wire `Library` into `src/app/routes/index.tsx` (depends on T015, T034)
+- [X] T033 [P] [US2] Implement pure `deriveCollections(documents): string[]` (Ramda `pipe`/`uniq`/`sortBy`) in `src/lib/catalog/deriveCollections.ts` (makes T031 pass)
+- [X] T034 [US2] Implement the `Library` view in `src/app/routes/Library.tsx` (uses existing `useDocuments`, `useFavorites` from T011, `DocumentViewerModal` from T013, `deriveCollections`) (depends on T033; makes T032 pass)
+- [X] T035 [US2] Wire `Library` into `src/app/routes/index.tsx` (depends on T015, T034)
 
 **Checkpoint**: User Stories 1 AND 2 both work independently
 
@@ -126,14 +126,14 @@ established there).
 
 ### Tests for User Story 3 ⚠️ write first, confirm failing
 
-- [ ] T036 [P] [US3] Integration test: favorite from Library, appears in Favorites, unfavorite removes it, in `tests/integration/favorites.integration.ts`
-- [ ] T037 [P] [US3] Component test for the `Favorites` view (list, empty state with link back to Library, accessibility, and that the download action requests the document's original format/content-type unchanged per FR-015) in `tests/component/Favorites.test.tsx` (constitution §Accessibility)
+- [X] T036 [P] [US3] Integration test: favorite from Library, appears in Favorites, unfavorite removes it, in `tests/integration/favorites.integration.ts`
+- [X] T037 [P] [US3] Component test for the `Favorites` view (list, empty state with link back to Library, accessibility, and that the download action requests the document's original format/content-type unchanged per FR-015) in `tests/component/Favorites.test.tsx` (constitution §Accessibility)
 
 ### Implementation for User Story 3
 
-- [ ] T038 [US3] Implement the `Favorites` view in `src/app/routes/Favorites.tsx` (depends on T011, T013; makes T037 pass)
-- [ ] T039 [US3] Wire `Favorites` into `src/app/routes/index.tsx` (depends on T015, T038)
-- [ ] T040 [P] [US3] Implement CLI `favorite`/`unfavorite` commands in `src/cli/commands/favorite.ts` (Principle II)
+- [X] T038 [US3] Implement the `Favorites` view in `src/app/routes/Favorites.tsx` (depends on T011, T013; makes T037 pass)
+- [X] T039 [US3] Wire `Favorites` into `src/app/routes/index.tsx` (depends on T015, T038)
+- [X] T040 [P] [US3] Implement CLI `favorite`/`unfavorite` commands in `src/cli/commands/favorite.ts` (Principle II)
 
 **Checkpoint**: User Stories 1, 2, AND 3 all work independently
 
@@ -147,30 +147,30 @@ established there).
 
 ### Tests for User Story 4 ⚠️ write first, confirm failing
 
-- [ ] T041 [P] [US4] Unit test for `inferSourceFormatFromFilename` in `tests/unit/inferSourceFormatFromFilename.test.ts`
-- [ ] T042 [P] [US4] Unit test for `wordTextExtractor` (mocked `mammoth`) in `tests/unit/wordTextExtractor.test.ts`
-- [ ] T043 [P] [US4] Unit test for `spreadsheetTextExtractor` (mocked `xlsx`) in `tests/unit/spreadsheetTextExtractor.test.ts`
-- [ ] T044 [P] [US4] Unit test for `validateUploadFile` (format + 50MB size checks, FR-010a/FR-010b) in `tests/unit/validateUploadFile.test.ts`
-- [ ] T045 [P] [US4] Contract test `POST /api/documents` (success incl. `.docx`/`.csv`, `UNSUPPORTED_FORMAT`, `FILE_TOO_LARGE`, `CONVERSION_FAILED`/`CATALOG_UNAVAILABLE` passthrough) in `tests/contract/upload.contract.ts` (contracts/bff-api.md)
-- [ ] T046 [P] [US4] Integration test: upload a `.docx` and a `.csv` end-to-end through the fakes, verify visible in Library and answerable from Ask & Search, in `tests/integration/upload.integration.ts`
-- [ ] T047 [P] [US4] Component test for the `Upload` view (drag states, per-file progress to indexed, format/size rejection messages, hidden entirely for non-permitted users, accessibility) in `tests/component/Upload.test.tsx` (constitution §Accessibility)
+- [X] T041 [P] [US4] Unit test for `inferSourceFormatFromFilename` in `tests/unit/inferSourceFormatFromFilename.test.ts`
+- [X] T042 [P] [US4] Unit test for `wordTextExtractor` (mocked `mammoth`) in `tests/unit/wordTextExtractor.test.ts`
+- [X] T043 [P] [US4] Unit test for `spreadsheetTextExtractor` (mocked `exceljs`) in `tests/unit/spreadsheetTextExtractor.test.ts`
+- [X] T044 [P] [US4] Unit test for `validateUploadFile` (format + 50MB size checks, FR-010a/FR-010b) in `tests/unit/validateUploadFile.test.ts`
+- [X] T045 [P] [US4] Contract test `POST /api/documents` (success incl. `.docx`/`.csv`, `UNSUPPORTED_FORMAT`, `FILE_TOO_LARGE`, `CONVERSION_FAILED`/`CATALOG_UNAVAILABLE` passthrough) in `tests/contract/upload.contract.ts` (contracts/bff-api.md)
+- [X] T046 [P] [US4] Integration test: upload a `.docx` and a `.csv` end-to-end through the fakes, verify visible in Library and answerable from Ask & Search, in `tests/integration/upload.integration.ts`
+- [X] T047 [P] [US4] Component test for the `Upload` view (drag states, per-file progress to indexed, format/size rejection messages, hidden entirely for non-permitted users, accessibility) in `tests/component/Upload.test.tsx` (constitution §Accessibility)
 
 ### Implementation for User Story 4
 
-- [ ] T048 [P] [US4] Extend `SourceFormat` union with `"word" | "spreadsheet"` in `src/lib/types.ts` (data-model.md)
-- [ ] T049 [US4] Update `isSupportedFormat` for the two new formats in `src/lib/conversion/isSupportedFormat.ts` (depends on T048)
-- [ ] T050 [US4] Update `resolveContentType` for the two new formats in `src/lib/storage/resolveContentType.ts` (depends on T048)
-- [ ] T051 [P] [US4] Implement pure `inferSourceFormatFromFilename(filename): SourceFormat | null` in `src/lib/conversion/inferSourceFormatFromFilename.ts` (makes T041 pass)
-- [ ] T052 [P] [US4] Implement `wordTextExtractor` (`mammoth`-backed) in `src/lib/conversion/wordTextExtractor.ts` (makes T042 pass)
-- [ ] T053 [P] [US4] Implement `spreadsheetTextExtractor` (`xlsx`-backed) in `src/lib/conversion/spreadsheetTextExtractor.ts` (makes T043 pass)
-- [ ] T054 [P] [US4] Implement pure `validateUploadFile({ filename, sizeBytes }): Result` in `src/lib/conversion/validateUploadFile.ts` (makes T044 pass)
-- [ ] T055 [US4] Update the real `documentAiProcessor` to branch `"word"`/`"spreadsheet"` to the new extractors, else keep the existing Document AI path, in `src/lib/conversion/documentAiProcessor.ts` (depends on T052–T053)
-- [ ] T056 [US4] Implement `uploadHandler` orchestration (`validateUploadFile` → create `ArchiveDocument` → `DocumentStorage.upload` → `attemptConversion` → `attemptPublish`) in `src/backend/ingestion/uploadHandler.ts` (depends on T049–T051, T054–T055)
-- [ ] T057 [US4] Implement `POST /api/documents` (multipart via `multer`, Publisher/Editor-only) in `src/backend/routes/documents.ts` (makes T045 pass; depends on T056)
-- [ ] T058 [P] [US4] Implement `useUpload` hook (XHR-based, for upload-progress events) in `src/app/queries/useUpload.ts`
-- [ ] T059 [US4] Implement the `Upload` view in `src/app/routes/Upload.tsx` (drag-drop, per-file progress, indexed state, toast on completion via T012) (depends on T058; makes T047 pass)
-- [ ] T060 [US4] Wire `Upload` into `src/app/routes/index.tsx` and gate its `SideNav` entry to permitted users (depends on T014, T015, T059)
-- [ ] T061 [P] [US4] Implement CLI `upload` command in `src/cli/commands/upload.ts` (Principle II — also usable for bulk-importing the `GMC-Newsletter-List.md` backlog)
+- [X] T048 [P] [US4] Extend `SourceFormat` union with `"word" | "spreadsheet"` in `src/lib/types.ts` (data-model.md)
+- [X] T049 [US4] Update `isSupportedFormat` for the two new formats in `src/lib/conversion/isSupportedFormat.ts` (depends on T048)
+- [X] T050 [US4] Update `resolveContentType` for the two new formats in `src/lib/storage/resolveContentType.ts` (depends on T048)
+- [X] T051 [P] [US4] Implement pure `inferSourceFormatFromFilename(filename): SourceFormat | null` in `src/lib/conversion/inferSourceFormatFromFilename.ts` (makes T041 pass)
+- [X] T052 [P] [US4] Implement `wordTextExtractor` (`mammoth`-backed) in `src/lib/conversion/wordTextExtractor.ts` (makes T042 pass)
+- [X] T053 [P] [US4] Implement `spreadsheetTextExtractor` (`exceljs`-backed) in `src/lib/conversion/spreadsheetTextExtractor.ts` (makes T043 pass)
+- [X] T054 [P] [US4] Implement pure `validateUploadFile({ filename, sizeBytes }): Result` in `src/lib/conversion/validateUploadFile.ts` (makes T044 pass)
+- [X] T055 [US4] Update the real `documentAiProcessor` to branch `"word"`/`"spreadsheet"` to the new extractors, else keep the existing Document AI path, in `src/lib/conversion/documentAiProcessor.ts` (depends on T052–T053)
+- [X] T056 [US4] Implement `uploadHandler` orchestration (`validateUploadFile` → create `ArchiveDocument` → `DocumentStorage.upload` → `attemptConversion` → `attemptPublish`) in `src/backend/ingestion/uploadHandler.ts` (depends on T049–T051, T054–T055)
+- [X] T057 [US4] Implement `POST /api/documents` (multipart via `multer`, Publisher/Editor-only) in `src/backend/routes/documents.ts` (makes T045 pass; depends on T056)
+- [X] T058 [P] [US4] Implement `useUpload` hook (XHR-based, for upload-progress events) in `src/app/queries/useUpload.ts`
+- [X] T059 [US4] Implement the `Upload` view in `src/app/routes/Upload.tsx` (drag-drop, per-file progress, indexed state, toast on completion via T012) (depends on T058; makes T047 pass)
+- [X] T060 [US4] Wire `Upload` into `src/app/routes/index.tsx` and gate its `SideNav` entry to permitted users (depends on T014, T015, T059)
+- [X] T061 [P] [US4] Implement CLI `upload` command in `src/cli/commands/upload.ts` (Principle II — also usable for bulk-importing the `GMC-Newsletter-List.md` backlog)
 
 **Checkpoint**: User Stories 1, 2, 3, AND 4 all work independently
 
@@ -184,30 +184,30 @@ established there).
 
 ### Tests for User Story 5 ⚠️ write first, confirm failing
 
-- [ ] T062 [P] [US5] Contract test for `AccessRequestStore` in `tests/contract/access-request-store.contract.ts` (contracts/access-request-store.md)
-- [ ] T063 [P] [US5] Contract test for access-request routes (submit, Editor-only list returns 403 for Researcher, approve, deny, validation errors, dedupe-while-pending, resubmit-after-denial) in `tests/contract/access-requests.contract.ts` (contracts/bff-api.md)
-- [ ] T064 [P] [US5] Integration test: request → approve → sign-in succeeds as Researcher; request → deny → sign-in routes back to request-access, in `tests/integration/access-request-approval.integration.ts`
-- [ ] T065 [P] [US5] Component test for `SignIn`/`RequestAccess` views (Google sign-in trigger, form validation, submitted confirmation, accessibility) in `tests/component/SignIn.test.tsx` (constitution §Accessibility)
-- [ ] T066 [P] [US5] Component test for the Editor-only `AccessRequestReview` view (pending list, approve/deny actions, accessibility) in `tests/component/AccessRequestReview.test.tsx` (constitution §Accessibility)
+- [X] T062 [P] [US5] Contract test for `AccessRequestStore` in `tests/contract/access-request-store.contract.ts` (contracts/access-request-store.md)
+- [X] T063 [P] [US5] Contract test for access-request routes (submit, Editor-only list returns 403 for Researcher, approve, deny, validation errors, dedupe-while-pending, resubmit-after-denial) in `tests/contract/access-requests.contract.ts` (contracts/bff-api.md)
+- [X] T064 [P] [US5] Integration test: request → approve → sign-in succeeds as Researcher; request → deny → sign-in routes back to request-access, in `tests/integration/access-request-approval.integration.ts`
+- [X] T065 [P] [US5] Component test for `SignIn`/`RequestAccess` views (Google sign-in trigger, form validation, submitted confirmation, accessibility) in `tests/component/SignIn.test.tsx` (constitution §Accessibility)
+- [X] T066 [P] [US5] Component test for the Editor-only `AccessRequestReview` view (pending list, approve/deny actions, accessibility) in `tests/component/AccessRequestReview.test.tsx` (constitution §Accessibility)
 
 ### Implementation for User Story 5
 
-- [ ] T067 [P] [US5] Implement `AccessRequestStore` interface in `src/lib/access/accessRequestStore.ts` (contracts/access-request-store.md)
-- [ ] T068 [P] [US5] Implement `fakeAccessRequestStore` in `src/lib/access/fakeAccessRequestStore.ts` (makes T062 pass; depends on T067)
-- [ ] T069 [P] [US5] Implement pure `accessRequestDecision` helpers (submission validation; approve/deny transition rules) in `src/lib/access/accessRequestDecision.ts`
-- [ ] T070 Extend `MemoryStore` with `accessRequests` and `provisionedUsers` maps in `src/backend/store/memoryStore.ts` (data-model.md)
-- [ ] T071 [P] [US5] Implement `UserDirectory` interface in `src/lib/access/userDirectory.ts`
-- [ ] T072 [P] [US5] Implement `fakeUserDirectory` (Map-backed) in `src/lib/access/fakeUserDirectory.ts` (depends on T071)
-- [ ] T073 Update `fakeAuthProvider` to accept an optional `userDirectory` for role resolution, falling back to its existing static-role behavior when absent (backward-compatible with all feature 001 tests) in `src/lib/auth/fakeAuthProvider.ts` (depends on T071)
-- [ ] T074 Update `googleAuthProvider` to accept an optional `userDirectory` for role resolution, falling back to its existing `roleAllowlist` behavior when absent, in `src/lib/auth/googleAuthProvider.ts` (depends on T071)
-- [ ] T075 Implement access-request routes (`POST /api/access-requests` unauthenticated; `GET` + approve/deny Editor-only via `requireRole`) in `src/backend/routes/accessRequests.ts` — approving calls `userDirectory.provision` (makes T063 pass; depends on T068–T069, T072)
-- [ ] T076 Wire `fakeUserDirectory`/`fakeAccessRequestStore` into `src/backend/app.ts` and `src/backend/server.ts` (depends on T073–T075)
-- [ ] T077 [P] [US5] Implement `useAccessRequests` hooks (submit, list pending, approve, deny) in `src/app/queries/useAccessRequests.ts`
-- [ ] T078 [US5] Implement the `SignIn` view in `src/app/routes/SignIn.tsx` (depends on T077; makes the sign-in half of T065 pass)
-- [ ] T079 [US5] Implement the `RequestAccess` view (form, validation, confirmation) in `src/app/routes/RequestAccess.tsx` (depends on T077; makes the rest of T065 pass)
-- [ ] T080 [US5] Implement the Editor-only `AccessRequestReview` view in `src/app/routes/AccessRequestReview.tsx` (depends on T077; makes T066 pass)
-- [ ] T081 [US5] Wire `SignIn`/`RequestAccess`/`AccessRequestReview` into `src/app/routes/index.tsx`, redirecting unauthenticated visitors to `SignIn` (depends on T015, T078–T080)
-- [ ] T082 [P] [US5] Implement CLI `request-access`/`review-requests` commands in `src/cli/commands/access.ts` (Principle II)
+- [X] T067 [P] [US5] Implement `AccessRequestStore` interface in `src/lib/access/accessRequestStore.ts` (contracts/access-request-store.md)
+- [X] T068 [P] [US5] Implement `fakeAccessRequestStore` in `src/lib/access/fakeAccessRequestStore.ts` (makes T062 pass; depends on T067)
+- [X] T069 [P] [US5] Implement pure `accessRequestDecision` helpers (submission validation; approve/deny transition rules) in `src/lib/access/accessRequestDecision.ts`
+- [X] T070 Extend `MemoryStore` with `accessRequests` and `provisionedUsers` maps in `src/backend/store/memoryStore.ts` (data-model.md)
+- [X] T071 [P] [US5] Implement `UserDirectory` interface in `src/lib/access/userDirectory.ts`
+- [X] T072 [P] [US5] Implement `fakeUserDirectory` (Map-backed) in `src/lib/access/fakeUserDirectory.ts` (depends on T071)
+- [X] T073 Update `fakeAuthProvider` to accept an optional `userDirectory` for role resolution, falling back to its existing static-role behavior when absent (backward-compatible with all feature 001 tests) in `src/lib/auth/fakeAuthProvider.ts` (depends on T071)
+- [X] T074 Update `googleAuthProvider` to accept an optional `userDirectory` for role resolution, falling back to its existing `roleAllowlist` behavior when absent, in `src/lib/auth/googleAuthProvider.ts` (depends on T071)
+- [X] T075 Implement access-request routes (`POST /api/access-requests` unauthenticated; `GET` + approve/deny Editor-only via `requireRole`) in `src/backend/routes/accessRequests.ts` — approving calls `userDirectory.provision` (makes T063 pass; depends on T068–T069, T072)
+- [X] T076 Wire `fakeUserDirectory`/`fakeAccessRequestStore` into `src/backend/app.ts` and `src/backend/server.ts` (depends on T073–T075)
+- [X] T077 [P] [US5] Implement `useAccessRequests` hooks (submit, list pending, approve, deny) in `src/app/queries/useAccessRequests.ts`
+- [X] T078 [US5] Implement the `SignIn` view in `src/app/routes/SignIn.tsx` (depends on T077; makes the sign-in half of T065 pass)
+- [X] T079 [US5] Implement the `RequestAccess` view (form, validation, confirmation) in `src/app/routes/RequestAccess.tsx` (depends on T077; makes the rest of T065 pass)
+- [X] T080 [US5] Implement the Editor-only `AccessRequestReview` view in `src/app/routes/AccessRequestReview.tsx` (depends on T077; makes T066 pass)
+- [X] T081 [US5] Wire `SignIn`/`RequestAccess`/`AccessRequestReview` into `src/app/routes/index.tsx`, redirecting unauthenticated visitors to `SignIn` (depends on T015, T078–T080)
+- [X] T082 [P] [US5] Implement CLI `request-access`/`review-requests` commands in `src/cli/commands/access.ts` (Principle II)
 
 **Checkpoint**: All five user stories are independently functional
 
@@ -217,15 +217,15 @@ established there).
 
 **Purpose**: End-to-end validation and quality gates across all five stories
 
-- [ ] T083 [P] Playwright e2e: ask → upload → favorite → access-request-approval full pipeline, in `tests/e2e/knowledge-catalog-redesign.spec.ts`
-- [ ] T084 [P] Playwright e2e: a Researcher cannot see/reach Upload or Access Request Review; an Editor can, in `tests/e2e/role-gating.spec.ts`
-- [ ] T085 Accessibility audit across every new view and component (`AskSearch`, `Library`, `Favorites`, `Upload`, `SignIn`, `RequestAccess`, `AccessRequestReview`, `DocumentViewerModal`, `Toast`, `SideNav`): automated `jest-axe`/Playwright-axe scan plus manual keyboard-only navigation; file and fix any findings (constitution §Accessibility)
-- [ ] T086 Security hardening pass: confirm the 50MB upload limit is enforced server-side (not only client-side), confirm Editor-only routes return 403 (not 200) for a Researcher session, confirm access-request name/email never appears in client-visible logs (only structured server logs)
-- [ ] T087 Quality-gate check: run `npm run test:coverage`, confirm the ≥90% threshold passes against the larger codebase; extend `jest.config.ts`'s `collectCoverageFrom` exclusions only for `vertexGenerativeAnswerModel.ts` (consistent with feature 001's treatment of its other un-credentialed real adapters)
-- [ ] T088 Run quickstart.md validation end-to-end against the fakes (and, if a GCP project becomes available, against the real Vertex AI Gemini integration)
-- [ ] T089 [P] Integration test: superseded document versions (FR-007a/FR-016 of feature 001, preserved here) are excluded by default from Library (T034), Favorites (T038), and Ask & Search (T024) results, in `tests/integration/version-filtering.integration.ts` — covers a gap identified by `/speckit-analyze` (FR-016 had no explicit re-verification under the new UI)
-- [ ] T090 [P] Integration test: downloading the same document from the Library (T034), the document viewer (T013), and the Ask & Search Sources panel (T027) all return the original format/content-type unchanged (FR-015), in `tests/integration/cross-surface-download.integration.ts` — covers a gap identified by `/speckit-analyze`
-- [ ] T091 [P] Component test: `DocumentViewerModal` (T013) shows a "no longer available" state, not an error, when opened for a document that has since been deleted (spec.md edge case), in `tests/component/DocumentViewerModal.test.tsx` — covers a gap identified by `/speckit-analyze`; `DocumentViewerModal` had no dedicated test task despite being Foundational/shared by three stories
+- [X] T083 [P] Playwright e2e: ask → upload → favorite → access-request-approval full pipeline, in `tests/e2e/knowledge-catalog-redesign.spec.ts`
+- [X] T084 [P] Playwright e2e: a Researcher cannot see/reach Upload or Access Request Review; an Editor can, in `tests/e2e/role-gating.spec.ts`
+- [X] T085 Accessibility audit across every new view and component (`AskSearch`, `Library`, `Favorites`, `Upload`, `SignIn`, `RequestAccess`, `AccessRequestReview`, `DocumentViewerModal`, `Toast`, `SideNav`): automated `jest-axe`/Playwright-axe scan plus manual keyboard-only navigation; file and fix any findings (constitution §Accessibility)
+- [X] T086 Security hardening pass: confirm the 50MB upload limit is enforced server-side (not only client-side), confirm Editor-only routes return 403 (not 200) for a Researcher session, confirm access-request name/email never appears in client-visible logs (only structured server logs)
+- [X] T087 Quality-gate check: run `npm run test:coverage`, confirm the ≥90% threshold passes against the larger codebase; extend `jest.config.ts`'s `collectCoverageFrom` exclusions only for `vertexGenerativeAnswerModel.ts` (consistent with feature 001's treatment of its other un-credentialed real adapters)
+- [X] T088 Run quickstart.md validation end-to-end against the fakes (and, if a GCP project becomes available, against the real Vertex AI Gemini integration)
+- [X] T089 [P] Integration test: superseded document versions (FR-007a/FR-016 of feature 001, preserved here) are excluded by default from Library (T034), Favorites (T038), and Ask & Search (T024) results, in `tests/integration/version-filtering.integration.ts` — covers a gap identified by `/speckit-analyze` (FR-016 had no explicit re-verification under the new UI)
+- [X] T090 [P] Integration test: downloading the same document from the Library (T034), the document viewer (T013), and the Ask & Search Sources panel (T027) all return the original format/content-type unchanged (FR-015), in `tests/integration/cross-surface-download.integration.ts` — covers a gap identified by `/speckit-analyze`
+- [X] T091 [P] Component test: `DocumentViewerModal` (T013) shows a "no longer available" state, not an error, when opened for a document that has since been deleted (spec.md edge case), in `tests/component/DocumentViewerModal.test.tsx` — covers a gap identified by `/speckit-analyze`; `DocumentViewerModal` had no dedicated test task despite being Foundational/shared by three stories
 
 ---
 

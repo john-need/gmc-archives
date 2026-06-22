@@ -32,8 +32,9 @@ Toolkit, TanStack Query, Ramda, React Router `HashRouter`, Express,
 `@google-cloud/storage`/`pubsub`/`documentai`/`aiplatform`). New for this
 feature: `@google-cloud/vertexai` (Gemini `generateContent` for RAG answer
 synthesis — decision in research.md §1), `mammoth` (Word `.docx` text
-extraction) and `xlsx` (spreadsheet text extraction) for the two upload
-formats Document AI's OCR processors don't target (research.md §2)
+extraction) and `exceljs` (spreadsheet text extraction; substituted for the
+originally planned `xlsx` after unpatched CVEs were found — research.md
+§2) for the two upload formats Document AI's OCR processors don't target
 
 **Storage**: Unchanged from feature 001 (Cloud Storage for source files;
 an in-memory `MemoryStore` stands in for the eventual Firestore metadata
@@ -113,7 +114,7 @@ src/
 │   ├── conversion/
 │   │   ├── inferSourceFormatFromFilename.ts   # NEW: extension → SourceFormat
 │   │   ├── wordTextExtractor.ts               # NEW: mammoth-backed
-│   │   ├── spreadsheetTextExtractor.ts        # NEW: xlsx-backed
+│   │   ├── spreadsheetTextExtractor.ts        # NEW: exceljs-backed
 │   │   └── (existing files unchanged)
 │   ├── storage/                    # unchanged from 001
 │   ├── catalog/                    # unchanged from 001

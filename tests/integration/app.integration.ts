@@ -7,6 +7,10 @@ import { createFakeDocumentProcessor } from "@/lib/conversion/fakeDocumentProces
 import { createFakeIngestionQueue } from "@/backend/ingestion/fakeIngestionQueue";
 import { createFakeCatalogStore } from "@/lib/catalog/fakeCatalogStore";
 import { createFakeSemanticIndex } from "@/lib/search/fakeSemanticIndex";
+import { createFakeGenerativeAnswerModel } from "@/lib/search/fakeGenerativeAnswerModel";
+import { createFakeFavoritesStore } from "@/lib/favorites/fakeFavoritesStore";
+import { createFakeAccessRequestStore } from "@/lib/access/fakeAccessRequestStore";
+import { createFakeUserDirectory } from "@/lib/access/fakeUserDirectory";
 
 async function buildTestApp(role: "viewer" | "publisher") {
   const store = createMemoryStore();
@@ -25,6 +29,10 @@ async function buildTestApp(role: "viewer" | "publisher") {
     publishDeps: { store, catalogStore, semanticIndex, conversionDeps: { documentStorage, documentProcessor, ingestionQueue } },
     catalogDeps: { store, catalogStore, semanticIndex, documentStorage },
     discoverabilityDeps: { store, catalogStore, semanticIndex },
+    askDeps: { store, catalogStore, semanticIndex, generativeAnswerModel: createFakeGenerativeAnswerModel() },
+    favoritesDeps: { store, favoritesStore: createFakeFavoritesStore() },
+    uploadDeps: { store, documentStorage, documentProcessor, ingestionQueue, catalogStore, semanticIndex },
+    accessRequestsDeps: { accessRequestStore: createFakeAccessRequestStore(), userDirectory: createFakeUserDirectory() },
     allowedOrigin: "https://gmc-archives.example.com"
   });
   return { app, token: session.token };

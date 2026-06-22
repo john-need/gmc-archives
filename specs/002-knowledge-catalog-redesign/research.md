@@ -50,7 +50,7 @@ package.json, which is used for the Vector Search `MatchService` instead).
 **Decision**: Add two new `SourceFormat` values, `"word"` and
 `"spreadsheet"`. For these, skip Document AI (it targets OCR/PDF
 structure, not native Office XML) and instead extract text directly in
-Node using `mammoth` (`.docx` → plain text) and `xlsx` (`.xls`/`.xlsx`/
+Node using `mammoth` (`.docx` → plain text) and `exceljs` (`.xls`/`.xlsx`/
 `.csv` → cell text, sheet-by-sheet). The extracted text feeds the same
 `mapExtractionToOkfRecord` pipeline as any other format — author/location/
 entity extraction for these two formats is best-effort (often absent from
@@ -59,13 +59,19 @@ office documents) and that's an acceptable, already-modeled outcome
 `isSupportedFormat` and `resolveContentType` (feature 001) both gain the
 two new cases.
 
-**Rationale**: `mammoth` and `xlsx` are small, single-purpose, widely-used
-libraries with no native-binary/system-dependency footprint (pure JS/WASM
-where needed) — the smallest addition that does the job, per the project's
-stated dependency discipline ("any dependencies introduced MUST be
-justified by a concrete feature need"). Routing these formats around
-Document AI rather than through it avoids contorting an OCR-oriented
-service into a role it isn't designed for.
+**Rationale**: `mammoth` and `exceljs` are small, single-purpose, widely-
+used libraries with no native-binary/system-dependency footprint — the
+smallest addition that does the job, per the project's stated dependency
+discipline ("any dependencies introduced MUST be justified by a concrete
+feature need"). Routing these formats around Document AI rather than
+through it avoids contorting an OCR-oriented service into a role it isn't
+designed for.
+**Implementation-time substitution**: the original plan named `xlsx`
+(SheetJS) for spreadsheet extraction; at implementation time `xlsx`'s npm
+releases carried two unpatched CVEs (CVE-2023-30533 prototype pollution,
+CVE-2024-22363 regex DoS) with no npm-side fix available. `exceljs` covers
+the same `.xls`/`.xlsx`/`.csv` text-extraction need without those CVEs, so
+it was substituted before any code was written against `xlsx`.
 
 **Alternatives considered**:
 - *Send Word/spreadsheet files to Document AI anyway* — rejected: Document

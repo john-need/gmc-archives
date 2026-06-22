@@ -5,6 +5,7 @@ import { createFakeDocumentStorage } from "@/lib/storage/fakeDocumentStorage";
 import { createFakeCatalogStore } from "@/lib/catalog/fakeCatalogStore";
 import { createFakeAuthProvider } from "@/lib/auth/fakeAuthProvider";
 import { createGoogleAuthProvider } from "@/lib/auth/googleAuthProvider";
+import { createFakeUserDirectory } from "@/lib/access/fakeUserDirectory";
 import type { ArchiveDocument, CatalogEntry } from "@/lib/types";
 
 describe("mapExtractionToOkfRecord", () => {
@@ -105,5 +106,22 @@ describe("createGoogleAuthProvider", () => {
     const afterSignOut = await provider.getCurrentUser(session);
     expect(user?.role).toBe("viewer");
     expect(afterSignOut).toBeNull();
+  });
+
+  it("resolves a role via userDirectory when provided, scoped by email", async () => {
+    const userDirectory = createFakeUserDirectory();
+    await userDirectory.provision("a@example.org", "viewer");
+    const provider = createGoogleAuthProvider({ stubBackend: true, userDirectory, email: "a@example.org" });
+    const session = await provider.signIn();
+    const user = await provider.getCurrentUser(session);
+    expect(user?.role).toBe("viewer");
+  });
+
+  it("returns null via userDirectory when the email has no provisioned role (unprovisioned)", async () => {
+    const userDirectory = createFakeUserDirectory();
+    const provider = createGoogleAuthProvider({ stubBackend: true, userDirectory, email: "nobody@example.org" });
+    const session = await provider.signIn();
+    const user = await provider.getCurrentUser(session);
+    expect(user).toBeNull();
   });
 });

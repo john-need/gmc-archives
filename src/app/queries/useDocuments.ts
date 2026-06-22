@@ -26,6 +26,14 @@ export function useDocuments(params: { section?: string; q?: string } = {}) {
   });
 }
 
+export function useArchiveDocument(archiveDocumentId: string | null) {
+  return useQuery({
+    queryKey: ["documents", "byId", archiveDocumentId],
+    queryFn: () => fetchJson<ArchiveDocument>(`/api/documents/${archiveDocumentId}`),
+    enabled: archiveDocumentId !== null
+  });
+}
+
 export function useConvertDocument() {
   const queryClient = useQueryClient();
   return useMutation({

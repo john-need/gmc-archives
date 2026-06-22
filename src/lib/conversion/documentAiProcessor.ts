@@ -1,5 +1,7 @@
 import { DocumentProcessorServiceClient } from "@google-cloud/documentai";
 import type { DocumentProcessor } from "@/lib/conversion/documentProcessor";
+import { extractWordText } from "@/lib/conversion/wordTextExtractor";
+import { extractSpreadsheetText } from "@/lib/conversion/spreadsheetTextExtractor";
 
 export interface DocumentAiProcessorOptions {
   processorName: string;
@@ -24,6 +26,14 @@ export function createDocumentAiProcessor(options: DocumentAiProcessorOptions): 
   return {
     async extract(file) {
       const content = await readAll(file.stream);
+
+      if (file.sourceFormat === "word") {
+        return { body: await extractWordText(content), author: null, location: null, entities: [], confidence: 0.95 };
+      }
+      if (file.sourceFormat === "spreadsheet") {
+        return { body: await extractSpreadsheetText(content), author: null, location: null, entities: [], confidence: 0.95 };
+      }
+
       const [result] = await client.processDocument({
         name: options.processorName,
         rawDocument: { content, mimeType: "application/pdf" }

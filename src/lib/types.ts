@@ -1,4 +1,4 @@
-export type SourceFormat = "pdf" | "scanned-image" | "text" | "markdown";
+export type SourceFormat = "pdf" | "scanned-image" | "text" | "markdown" | "word" | "spreadsheet";
 
 export interface ArchiveDocument {
   id: string;
@@ -78,4 +78,23 @@ export interface User {
   id: string;
   role: UserRole;
   identityProvider: IdentityProvider;
+}
+
+export interface Favorite {
+  userId: string;
+  archiveDocumentId: string;
+  favoritedAt: string;
+}
+
+export type AccessRequestStatus = "pending" | "approved" | "denied";
+
+export interface AccessRequest {
+  email: string;
+  name: string;
+  affiliation: string | null;
+  reason: string;
+  status: AccessRequestStatus;
+  submittedAt: string;
+  decidedAt: string | null;
+  decidedBy: string | null;
 }

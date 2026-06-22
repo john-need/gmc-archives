@@ -22,7 +22,27 @@
       "Bash(curl -s http://localhost:5174/)",
       "Bash(curl -s -o /dev/null -w \"main.tsx:%{http_code}\\\\n\" http://localhost:5174/src/app/main.tsx)",
       "Bash(pkill -f \"ts-node.*server.ts\")",
-      "Bash(pkill -f \"vite\")"
+      "Bash(pkill -f \"vite\")",
+      "Bash(.specify/scripts/bash/setup-plan.sh *)",
+      "Bash(.specify/scripts/bash/setup-tasks.sh *)",
+      "Bash(npm audit *)",
+      "Bash(curl -s -o /dev/null -w \"GET /api/documents: %{http_code}\\\\n\" http://localhost:8080/api/documents -H \"Authorization: Bearer x\")",
+      "Bash(curl -s -X POST http://localhost:8080/api/ask -H \"Content-Type: application/json\" -H \"Authorization: Bearer x\" -d '{\"question\":\"hello\"}')",
+      "Bash(curl -s -o /dev/null -w \"GET /api/favorites: %{http_code}\\\\n\" http://localhost:8080/api/favorites -H \"Authorization: Bearer x\")",
+      "Bash(curl -s -X POST http://localhost:8080/api/access-requests -H \"Content-Type: application/json\" -d '{\"name\":\"A One\",\"email\":\"a@example.org\",\"reason\":\"research\"}')",
+      "Bash(curl -s http://localhost:8080/api/access-requests -H \"Authorization: Bearer x\")",
+      "Bash(curl -s -X POST http://localhost:8080/api/access-requests/a@example.org/approve -H \"Authorization: Bearer x\")",
+      "Bash(curl -s -o /dev/null -w \"POST /api/documents \\(no auth\\): %{http_code}\\\\n\" -X POST http://localhost:8080/api/documents -F \"file=@/dev/null;filename=test.pdf;type=application/pdf\"2)",
+      "Bash(curl -s -X POST http://localhost:8080/api/ask -H \"Content-Type: application/json\" -d '{\"question\":\"What does the archive cover?\"}')",
+      "Bash(curl -s \"http://localhost:8080/api/catalog/search?q=trail\" -H \"Authorization: Bearer x\")",
+      "Bash(curl -s -X POST http://localhost:8080/api/access-requests -H \"Content-Type: application/json\" -d '{\"name\":\"Quickstart Tester\",\"email\":\"qs@example.org\",\"reason\":\"Validating the quickstart\"}')",
+      "Bash(GMC_API_BASE_URL=http://localhost:8080 npx ts-node -r tsconfig-paths/register src/cli/index.ts ask \"What is in the archive\" --json)",
+      "Bash(GMC_API_BASE_URL=http://localhost:8080 npx ts-node -r tsconfig-paths/register src/cli/index.ts request-access --name \"CLI Tester\" --email cli@example.org --reason \"Validating quickstart CLI flow\" --json)",
+      "Bash(curl -s http://localhost:5180/src/app/routes/index.tsx)",
+      "Bash(echo \"---exit:$?\")",
+      "Bash(curl -s -o /dev/null -w \"routes/index.tsx:%{http_code}\\\\n\" http://localhost:5180/src/app/routes/index.tsx)",
+      "Bash(echo \"ESLINT EXIT:$?\")",
+      "Bash(perl -i -pe 's/^- \\\\[ \\\\] T0/- [X] T0/' tasks.md)"
     ]
   }
 }

@@ -18,7 +18,7 @@ function latestOkfRecordForDocument(store: MemoryStore, archiveDocumentId: strin
   return records.sort((a, b) => b.archiveDocumentVersion - a.archiveDocumentVersion)[0];
 }
 
-async function attemptPublish(
+export async function attemptPublish(
   okfRecord: OkfRecord,
   deps: PublishRoutesDeps
 ): Promise<{ httpStatus: 200 | 409 | 502; body: Record<string, unknown> }> {

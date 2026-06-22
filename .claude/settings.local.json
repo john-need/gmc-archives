@@ -22,7 +22,9 @@
       "Bash(curl -s http://localhost:5174/)",
       "Bash(curl -s -o /dev/null -w \"main.tsx:%{http_code}\\\\n\" http://localhost:5174/src/app/main.tsx)",
       "Bash(pkill -f \"ts-node.*server.ts\")",
-      "Bash(pkill -f \"vite\")"
+      "Bash(pkill -f \"vite\")",
+      "Bash(.specify/scripts/bash/setup-plan.sh *)",
+      "Bash(.specify/scripts/bash/setup-tasks.sh *)"
     ]
   }
 }

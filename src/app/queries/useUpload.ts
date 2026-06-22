@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { getAuthToken } from "@/app/auth/authToken";
 
 export interface UploadProgressEntry {
   id: string;
@@ -13,6 +14,10 @@ function uploadOne(file: File, onProgress: (progress: number) => void): Promise<
   return new Promise((resolve) => {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/documents");
+    const token = getAuthToken();
+    if (token !== null) {
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+    }
     xhr.upload.addEventListener("progress", (event) => {
       if (event.lengthComputable) {
         onProgress(Math.round((event.loaded / event.total) * 100));

@@ -28,14 +28,14 @@
 </helmet>
 
 <sc-if value="{{ notAuthed }}" hint-placeholder-val="{{ true }}">
-  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;background:radial-gradient(1200px 600px at 70% -10%, #FBEFE6 0%, #F4F0E9 55%);">
+  <div style="{{ authWrapStyle }}">
     <div style="width:100%;max-width:430px;animation:kc-pop .5s ease both;">
       <div style="display:flex;align-items:center;gap:11px;margin-bottom:30px;">
         <img src="gmc-btv-logo.png" alt="Green Mountain Club" width="52" height="52" style="display:block;object-fit:contain;" />
-        <span style="font-size:18px;font-weight:700;letter-spacing:-.01em;">GMC&#8202;·&#8202;Burlington Historical Archive</span>
+        <span style="font-size:18px;font-weight:700;letter-spacing:-.01em;">GMC&#8202;·&#8202;Burlington Collections</span>
       </div>
       <sc-if value="{{ showLogin }}" hint-placeholder-val="{{ true }}">
-        <div style="background:#FBF7EC;border:1px solid #EAE2D6;border-radius:4px;padding:34px 32px;box-shadow:0 1px 2px rgba(60,45,30,.04),0 6px 16px rgba(60,45,30,.08);">
+        <div style="{{ loginCardStyle }}">
           <h1 style="margin:0 0 8px;font-size:25px;font-weight:700;letter-spacing:-.02em;">Welcome back</h1>
           <p style="margin:0 0 26px;color:#7A7064;font-size:15px;line-height:1.5;">Sign in to search, ask, and explore the Green Mountain Club's Burlington historical records.</p>
 
@@ -60,7 +60,7 @@
               Back to sign in
             </button>
             <h1 style="margin:0 0 10px;font-size:23px;font-weight:700;letter-spacing:-.02em;">Request access</h1>
-            <p style="margin:0 0 22px;color:#7A7064;font-size:14px;line-height:1.6;">Access to the archive is free, but requires approval by GMC Burlington. Complete the form below to request access. Approval is manual and may take several days.</p>
+            <p style="margin:0 0 22px;color:#7A7064;font-size:14px;line-height:1.6;">Access to the archive is free, but requires approval by GMC&nbsp;Burlington. Complete the form below to request access. Approval is manual and may take several days.</p>
 
             <div style="margin-bottom:15px;">
               <label style="display:block;font-size:12.5px;font-weight:600;color:#5C544A;margin-bottom:6px;">Name <span style="color:#B4543A;">*</span></label>
@@ -92,7 +92,7 @@
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4E8C4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>
               </div>
               <h1 style="margin:0 0 10px;font-size:22px;font-weight:700;letter-spacing:-.02em;">Request submitted</h1>
-              <p style="margin:0 0 24px;color:#7A7064;font-size:14.5px;line-height:1.6;">Thanks, {{ reqSubmitterName }} — we've received your request. Approval is manual and may take several days; you'll hear from GMC Burlington by email.</p>
+              <p style="margin:0 0 24px;color:#7A7064;font-size:14.5px;line-height:1.6;">Thanks, {{ reqSubmitterName }} — we've received your request. Approval is manual and may take several days; you'll hear from GMC&nbsp;Burlington by email.</p>
               <button onClick="{{ goLogin }}" style="padding:11px 22px;border:1px solid #E3DACD;border-radius:3px;background:#FBF7EC;color:#2A2520;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;" style-hover="background:#FBF8F3">Back to sign in</button>
             </div>
           </sc-if>
@@ -106,10 +106,14 @@
 <sc-if value="{{ authed }}">
   <div style="display:flex;height:100vh;overflow:hidden;background:#F4F0E9;">
 
-    <aside style="width:250px;flex:none;background:#EDE6DB;border-right:1px solid #E4DBCD;display:flex;flex-direction:column;padding:18px 14px;">
+    <sc-if value="{{ drawerBackdrop }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;background:rgba(42,30,20,.4);backdrop-filter:blur(2px);z-index:50;animation:kc-fade .2s ease both;"></div>
+    </sc-if>
+
+    <aside style="{{ sidebarStyle }}">
       <div style="display:flex;align-items:center;gap:10px;padding:6px 8px 18px;">
         <img src="gmc-btv-logo.png" alt="Green Mountain Club" width="40" height="40" style="display:block;object-fit:contain;flex:none;" />
-        <span style="font-size:14.5px;font-weight:700;letter-spacing:-.01em;line-height:1.2;">GMC<br>Burlington Historical Archive</span>
+        <span style="font-size:14.5px;font-weight:700;letter-spacing:-.01em;line-height:1.2;">GMC&#8202;·&#8202;Burlington Collections</span>
       </div>
 
       <nav style="display:flex;flex-direction:column;gap:3px;margin-top:6px;">
@@ -127,9 +131,9 @@
           <sc-if value="{{ hasFavs }}" hint-placeholder-val="{{ true }}"><span style="margin-left:auto;font-size:12px;font-weight:600;background:#E4DACB;color:#7A7064;border-radius:999px;padding:1px 8px;">{{ favCount }}</span></sc-if>
         </button>
         <sc-if value="{{ isEditor }}" hint-placeholder-val="{{ true }}">
-          <button onClick="{{ goUpload }}" style="{{ navUploadStyle }}" style-hover="background:rgba(255,255,255,.55)">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V5"/><path d="m7 9 5-5 5 5"/><path d="M5 19h14"/></svg>
-            Upload
+          <button onClick="{{ goCollections }}" style="{{ navUploadStyle }}" style-hover="background:rgba(255,255,255,.55)">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-7.5l-2-2H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1z"/></svg>
+            Collections
           </button>
         </sc-if>
       </nav>
@@ -149,10 +153,17 @@
     </aside>
 
     <main style="flex:1;display:flex;flex-direction:column;min-width:0;">
-      <header style="height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid #E7DFD2;background:#F8F4ED;">
-        <h2 style="margin:0;font-size:18px;font-weight:700;letter-spacing:-.01em;">{{ sectionTitle }}</h2>
+      <header style="{{ headerStyle }}">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+          <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ openDrawer }}" title="Menu" style="flex:none;width:38px;height:38px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#3A342C;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+            </button>
+          </sc-if>
+          <h2 style="margin:0;font-size:18px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ sectionTitle }}</h2>
+        </div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <sc-if value="{{ showNewChat }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ showNewChatHeader }}" hint-placeholder-val="{{ false }}">
             <button onClick="{{ onNewChat }}" style="display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#2A2520;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .15s;" style-hover="background:#FBF8F3">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
               New chat
@@ -167,7 +178,7 @@
           <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
 
             <sc-if value="{{ showWelcome }}" hint-placeholder-val="{{ true }}">
-              <div style="flex:1;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;" class="kc-scroll">
+              <div style="{{ welcomeWrapStyle }}" class="kc-scroll">
                 <div style="max-width:620px;width:100%;text-align:center;animation:kc-fade .5s ease both;">
                   <div style="width:52px;height:52px;margin:0 auto 20px;border-radius:4px;background:#E9ECD7;display:flex;align-items:center;justify-content:center;">
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4A5E22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2a7.5 7.5 0 0 1 5.96 12.06l4.24 4.24a1 1 0 0 1-1.41 1.41l-4.24-4.24A7.5 7.5 0 1 1 9.5 2z"/></svg>
@@ -229,8 +240,8 @@
               </div>
             </sc-if>
 
-            <div style="flex:none;padding:14px 36px 22px;border-top:1px solid #ECE4D7;background:#F8F4ED;">
-              <div style="max-width:720px;margin:0 auto;display:flex;align-items:flex-end;gap:10px;background:#FBF7EC;border:1px solid #E3DACD;border-radius:4px;padding:8px 8px 8px 16px;box-shadow:0 1px 2px rgba(60,45,30,.04),0 2px 6px rgba(60,45,30,.05);">
+            <div style="{{ composerOuterStyle }}">
+              <div style="{{ composerBoxStyle }}">
                 <textarea value="{{ draft }}" onChange="{{ onDraftChange }}" onKeyDown="{{ onInputKey }}" rows="1" placeholder="Ask anything about your documents…" style="flex:1;border:none;outline:none;resize:none;background:transparent;font-size:15px;line-height:1.5;color:#2A2520;padding:7px 0;max-height:140px;"></textarea>
                 <button onClick="{{ onSend }}" style="{{ sendBtnStyle }}">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m6 11 6-6 6 6"/></svg>
@@ -239,10 +250,21 @@
             </div>
           </div>
 
-          <aside class="kc-scroll" style="width:330px;flex:none;border-left:1px solid #E7DFD2;background:#FBF8F3;overflow:auto;padding:22px 20px;">
+          <sc-if value="{{ sheetBackdrop }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;background:rgba(42,30,20,.4);backdrop-filter:blur(2px);z-index:50;animation:kc-fade .2s ease both;"></div>
+          </sc-if>
+          <aside class="kc-scroll" style="{{ sourcesAsideStyle }}">
+            <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+              <div style="height:4px;width:42px;border-radius:999px;background:#D9CEBE;margin:6px auto 12px;"></div>
+            </sc-if>
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9A9085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               <span style="font-size:13px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#9A9085;">Sources</span>
+              <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ closeSheet }}" title="Close" style="margin-left:auto;width:32px;height:32px;border-radius:3px;border:none;background:#F2ECE2;color:#7A7064;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+              </sc-if>
             </div>
             <sc-if value="{{ hasSources }}" hint-placeholder-val="{{ false }}">
               <div style="display:flex;flex-direction:column;gap:12px;">
@@ -286,6 +308,7 @@
       <!-- LIBRARY -->
       <sc-if value="{{ isLibrary }}" hint-placeholder-val="{{ false }}">
         <div class="kc-scroll" style="flex:1;overflow:auto;padding:26px 28px 40px;">
+          <sc-if value="{{ showLibTop }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px;">
             <div style="position:relative;flex:1;min-width:240px;">
               <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A79D90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
@@ -306,6 +329,7 @@
               <button onClick="{{ f.onClick }}" style="{{ f.style }}">{{ f.label }}</button>
             </sc-for>
           </div>
+          </sc-if>
 
           <sc-if value="{{ gridActive }}" hint-placeholder-val="{{ true }}">
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
@@ -413,48 +437,211 @@
       </sc-if>
 
       <!-- UPLOAD -->
-      <sc-if value="{{ isUpload }}" hint-placeholder-val="{{ false }}">
-        <div class="kc-scroll" style="flex:1;overflow:auto;padding:26px 28px 40px;">
-          <div style="max-width:760px;margin:0 auto;">
-            <p style="margin:0 0 20px;color:#7A7064;font-size:15px;line-height:1.55;">Add documents to the catalog. Uploads are indexed automatically so they become searchable and answerable right away.</p>
-            <div onClick="{{ onBrowse }}" onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}" style="{{ dropStyle }}">
-              <div style="width:48px;height:48px;border-radius:3px;background:#E9ECD7;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4A5E22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V5"/><path d="m7 9 5-5 5 5"/><path d="M5 19h14"/></svg></div>
-              <div style="font-size:16px;font-weight:600;margin-bottom:5px;">Drop files here or click to browse</div>
-              <div style="font-size:13px;color:#A79D90;">PDF · Word · HTML · Images · Spreadsheets — up to 50 MB each</div>
-            </div>
+      <!-- COLLECTIONS LIST -->
+      <sc-if value="{{ isCollList }}" hint-placeholder-val="{{ false }}">
+        <div class="kc-scroll" style="flex:1;overflow:auto;padding:24px 20px 48px;">
+          <div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:22px;">
 
-            <sc-if value="{{ hasUploads }}" hint-placeholder-val="{{ false }}">
-              <div style="margin-top:26px;display:flex;flex-direction:column;gap:10px;">
-                <sc-for list="{{ uploads }}" as="u" hint-placeholder-count="2">
-                  <div style="border:1px solid #EAE1D4;border-radius:3px;background:#FBF7EC;padding:14px 16px;">
-                    <div style="display:flex;align-items:center;gap:12px;">
-                      <span style="font-size:10px;font-weight:700;letter-spacing:.05em;color:#A0958A;font-family:ui-monospace,monospace;background:#F2ECE2;padding:4px 7px;border-radius:2px;flex:none;width:46px;text-align:center;">{{ u.typeLabel }}</span>
+            <section style="background:#FBF7EC;border:1px solid #EAE1D4;border-radius:4px;padding:20px;">
+              <h3 style="margin:0 0 4px;font-size:16.5px;font-weight:700;letter-spacing:-.01em;">Create a collection</h3>
+              <p style="margin:0 0 16px;color:#7A7064;font-size:13.5px;line-height:1.5;">Group related records together. You can upload files and edit details once it's created.</p>
+              <div style="display:flex;gap:9px;flex-wrap:wrap;">
+                <input value="{{ newCollName }}" onChange="{{ onNewCollName }}" onKeyDown="{{ onNewCollKey }}" placeholder="New collection name" style="flex:1;min-width:170px;height:46px;padding:0 14px;border:1px solid #E3DACD;border-radius:3px;background:#FBF8F3;font-size:15px;color:#2A2520;outline:none;font-family:inherit;box-sizing:border-box;"/>
+                <button onClick="{{ onCreateCollection }}" style="{{ createBtnStyle }}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                  Create
+                </button>
+              </div>
+            </section>
+
+            <section style="background:#FBF7EC;border:1px solid #EAE1D4;border-radius:4px;padding:20px;">
+              <h3 style="margin:0 0 16px;font-size:16.5px;font-weight:700;letter-spacing:-.01em;">All collections</h3>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <sc-for list="{{ manageCollections }}" as="c" hint-placeholder-count="6">
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #EAE1D4;border-radius:3px;background:#FBF8F3;">
+                    <button onClick="{{ c.onOpen }}" style="flex:1;min-width:0;display:flex;align-items:center;gap:12px;border:none;background:transparent;padding:0;cursor:pointer;text-align:left;font-family:inherit;">
+                      <svg style="flex:none;color:#8A9468;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-7.5l-2-2H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1z"/></svg>
                       <div style="flex:1;min-width:0;">
-                        <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ u.name }}</div>
-                        <div style="font-size:12px;color:{{ u.statusColor }};margin-top:2px;">{{ u.statusLabel }}</div>
+                        <div style="font-size:14.5px;font-weight:600;color:#2A2520;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ c.name }}</div>
+                        <div style="font-size:12px;color:#A79D90;">{{ c.count }} documents · {{ c.accessLabel }}</div>
                       </div>
-                      <sc-if value="{{ u.done }}" hint-placeholder-val="{{ false }}">
-                        <span style="flex:none;width:24px;height:24px;border-radius:50%;background:#E8F0E5;color:#4E8C4A;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
-                      </sc-if>
-                    </div>
-                    <div style="margin-top:11px;height:6px;border-radius:999px;background:#F0E9DD;overflow:hidden;">
-                      <div style="{{ u.barStyle }}"></div>
-                    </div>
+                    </button>
+                    <button onClick="{{ c.onEdit }}" title="Edit details" style="flex:none;width:40px;height:40px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#5C544A;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;" style-hover="background:#F3ECE1">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+                    </button>
+                    <button onClick="{{ c.onOpen }}" title="Open collection" style="flex:none;width:40px;height:40px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#5C544A;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;" style-hover="background:#F3ECE1">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                    </button>
                   </div>
                 </sc-for>
               </div>
-            </sc-if>
+            </section>
+
           </div>
+        </div>
+      </sc-if>
+
+      <!-- COLLECTION DETAIL -->
+      <sc-if value="{{ isCollDetail }}" hint-placeholder-val="{{ false }}">
+        <div class="kc-scroll" style="flex:1;overflow:auto;padding:20px 20px 48px;">
+          <div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:22px;">
+
+            <div style="display:flex;align-items:center;gap:12px;">
+              <button onClick="{{ backToCollections }}" style="flex:none;display:flex;align-items:center;gap:6px;height:40px;padding:0 12px 0 8px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#5C544A;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;" style-hover="background:#F3ECE1">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                All collections
+              </button>
+              <div style="flex:1;"></div>
+              <button onClick="{{ onEditDetailColl }}" style="flex:none;display:flex;align-items:center;gap:7px;height:40px;padding:0 14px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#3A342C;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;" style-hover="background:#F3ECE1">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+                Edit details
+              </button>
+            </div>
+
+            <section style="background:#FBF7EC;border:1px solid #EAE1D4;border-radius:4px;padding:20px;">
+              <div style="display:flex;align-items:center;gap:11px;margin-bottom:10px;">
+                <svg style="flex:none;color:#8A9468;" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-7.5l-2-2H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1z"/></svg>
+                <h2 style="margin:0;font-size:21px;font-weight:700;letter-spacing:-.02em;">{{ detailName }}</h2>
+              </div>
+              <sc-if value="{{ detailHasDescription }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0 0 8px;color:#5C544A;font-size:14px;line-height:1.55;">{{ detailDescription }}</p>
+              </sc-if>
+              <sc-if value="{{ detailHasNotes }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0 0 8px;color:#857B70;font-size:13px;line-height:1.5;font-style:italic;">{{ detailNotes }}</p>
+              </sc-if>
+              <div style="display:inline-flex;align-items:center;gap:7px;margin-top:6px;font-size:12.5px;font-weight:600;color:{{ detailAccessColor }};">
+                <span style="width:8px;height:8px;border-radius:50%;background:currentColor;"></span>
+                {{ detailAccessLabel }} · {{ detailDocCount }} documents
+              </div>
+            </section>
+
+            <section style="background:#FBF7EC;border:1px solid #EAE1D4;border-radius:4px;padding:20px;">
+              <h3 style="margin:0 0 4px;font-size:16.5px;font-weight:700;letter-spacing:-.01em;">Upload to this collection</h3>
+              <p style="margin:0 0 16px;color:#7A7064;font-size:13.5px;line-height:1.5;">Files are added to <strong>{{ detailName }}</strong> and indexed automatically.</p>
+              <div onClick="{{ onBrowse }}" onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}" style="{{ dropStyle }}">
+                <div style="width:48px;height:48px;border-radius:3px;background:#E9ECD7;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4A5E22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V5"/><path d="m7 9 5-5 5 5"/><path d="M5 19h14"/></svg></div>
+                <div style="font-size:15.5px;font-weight:600;margin-bottom:5px;">Drop files here or tap to browse</div>
+                <div style="font-size:12.5px;color:#A79D90;">PDF · Word · HTML · Images · Spreadsheets — up to 50 MB each</div>
+              </div>
+              <sc-if value="{{ hasUploads }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:18px;display:flex;flex-direction:column;gap:10px;">
+                  <sc-for list="{{ uploads }}" as="u" hint-placeholder-count="2">
+                    <div style="border:1px solid #EAE1D4;border-radius:3px;background:#FBF8F3;padding:14px 16px;">
+                      <div style="display:flex;align-items:center;gap:12px;">
+                        <span style="font-size:10px;font-weight:700;letter-spacing:.05em;color:#A0958A;font-family:ui-monospace,monospace;background:#F2ECE2;padding:4px 7px;border-radius:2px;flex:none;width:46px;text-align:center;">{{ u.typeLabel }}</span>
+                        <div style="flex:1;min-width:0;">
+                          <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ u.name }}</div>
+                          <div style="font-size:12px;color:{{ u.statusColor }};margin-top:2px;">{{ u.statusLabel }}</div>
+                        </div>
+                        <sc-if value="{{ u.done }}" hint-placeholder-val="{{ false }}">
+                          <span style="flex:none;width:24px;height:24px;border-radius:50%;background:#E8F0E5;color:#4E8C4A;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
+                        </sc-if>
+                      </div>
+                      <div style="margin-top:11px;height:6px;border-radius:999px;background:#F0E9DD;overflow:hidden;">
+                        <div style="{{ u.barStyle }}"></div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </section>
+
+            <section style="background:#FBF7EC;border:1px solid #EAE1D4;border-radius:4px;padding:20px;">
+              <h3 style="margin:0 0 16px;font-size:16.5px;font-weight:700;letter-spacing:-.01em;">Documents in this collection</h3>
+              <sc-if value="{{ detailHasDocs }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <sc-for list="{{ detailDocs }}" as="d" hint-placeholder-count="4">
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #EAE1D4;border-radius:3px;background:#FBF8F3;">
+                      <span style="font-size:10px;font-weight:700;letter-spacing:.05em;color:#A0958A;font-family:ui-monospace,monospace;background:#F2ECE2;padding:4px 7px;border-radius:2px;flex:none;width:46px;text-align:center;">{{ d.typeLabel }}</span>
+                      <button onClick="{{ d.onView }}" style="flex:1;min-width:0;text-align:left;border:none;background:transparent;cursor:pointer;padding:0;font-family:inherit;">
+                        <div style="font-size:14.5px;font-weight:600;color:#2A2520;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ d.title }}</div>
+                        <div style="font-size:12px;color:#A79D90;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ d.meta }}</div>
+                      </button>
+                      <button onClick="{{ d.onEdit }}" title="Edit metadata" style="flex:none;width:40px;height:40px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#5C544A;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;" style-hover="background:#F3ECE1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+                      </button>
+                      <button onClick="{{ d.onDelete }}" title="Delete document" style="flex:none;width:40px;height:40px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#9A9085;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s, color .15s;" style-hover="background:#F7E3DC;color:#C0492F">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6"/></svg>
+                      </button>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ detailNoDocs }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0;color:#A79D90;font-size:13.5px;line-height:1.5;text-align:center;padding:18px 0;">No documents yet — upload files above to add them to this collection.</p>
+              </sc-if>
+            </section>
+
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showBottomBar }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:none;display:flex;align-items:center;gap:9px;padding:10px 14px;border-top:1px solid #E7DFD2;background:#F8F4ED;">
+          <sc-if value="{{ isLibrary }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ openCollModal }}" title="Collections" style="position:relative;flex:none;width:46px;height:46px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#3A342C;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18"/><path d="M6 12h12"/><path d="M10 19h4"/></svg>
+              <sc-if value="{{ collFilterActive }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:7px;right:7px;width:9px;height:9px;border-radius:50%;background:#4A5E22;border:2px solid #FBF7EC;"></span></sc-if>
+            </button>
+            <div style="position:relative;flex:1;min-width:0;">
+              <svg style="position:absolute;left:13px;top:50%;transform:translateY(-50%);" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A79D90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+              <input value="{{ libQuery }}" onChange="{{ onLibQuery }}" placeholder="Search…" style="width:100%;height:46px;padding:0 14px 0 38px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;font-size:15px;color:#2A2520;outline:none;font-family:inherit;box-sizing:border-box;"/>
+            </div>
+            <div style="flex:none;display:flex;gap:4px;background:#EDE6DB;border-radius:3px;padding:4px;height:46px;align-items:center;">
+              <button onClick="{{ onGrid }}" title="Grid" style="{{ gridBtnStyle }}">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              </button>
+              <button onClick="{{ onList }}" title="List" style="{{ listBtnStyle }}">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
+              </button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isSearch }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ hasSources }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ openSheet }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#3A342C;font-size:14.5px;font-weight:600;cursor:pointer;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4A5E22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                View {{ sourcesCount }} sources
+              </button>
+            </sc-if>
+            <sc-if value="{{ showNewChat }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ onNewChat }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;height:46px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#2A2520;font-size:14.5px;font-weight:600;cursor:pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                New chat
+              </button>
+            </sc-if>
+          </sc-if>
         </div>
       </sc-if>
     </main>
   </div>
 </sc-if>
 
+<sc-if value="{{ collModalOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;background:#FBF8F3;z-index:60;display:flex;flex-direction:column;animation:kc-fade .2s ease both;">
+    <div style="flex:none;display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #EAE1D4;background:#F8F4ED;">
+      <h2 style="margin:0;font-size:18px;font-weight:700;flex:1;letter-spacing:-.01em;">Collections</h2>
+      <button onClick="{{ closeCollModal }}" title="Close" style="flex:none;width:38px;height:38px;border-radius:3px;border:none;background:#F2ECE2;color:#7A7064;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="kc-scroll" style="flex:1;overflow:auto;">
+      <sc-for list="{{ collectionList }}" as="c" hint-placeholder-count="8">
+        <button onClick="{{ c.onClick }}" style="{{ c.rowStyle }}">
+          {{ c.label }}
+          <span style="{{ c.countStyle }}">{{ c.count }}</span>
+          <sc-if value="{{ c.checkVisible }}" hint-placeholder-val="{{ false }}">
+            <svg style="flex:none;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A5E22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>
+          </sc-if>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+
 <!-- DOCUMENT MODAL -->
 <sc-if value="{{ docOpen }}" hint-placeholder-val="{{ false }}">
-  <div onClick="{{ onCloseDoc }}" style="position:fixed;inset:0;background:rgba(42,30,20,.4);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:32px;z-index:50;animation:kc-fade .2s ease both;">
-    <div onClick="{{ stop }}" style="width:100%;max-width:820px;max-height:86vh;background:#FBF8F3;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 14px 40px rgba(40,25,15,.26);animation:kc-pop .28s ease both;">
+  <div onClick="{{ onCloseDoc }}" style="{{ docBackdropStyle }}">
+    <div onClick="{{ stop }}" style="{{ docCardStyle }}">
       <div style="display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid #EAE1D4;background:#FBF7EC;">
         <span style="font-size:10.5px;font-weight:700;letter-spacing:.05em;color:#A0958A;font-family:ui-monospace,monospace;background:#F2ECE2;padding:4px 9px;border-radius:2px;">{{ activeType }}</span>
         <div style="font-size:16px;font-weight:700;flex:1;min-width:0;letter-spacing:-.01em;">{{ activeTitle }}</div>
@@ -462,6 +649,52 @@
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
       </div>
+
+      <sc-if value="{{ docMobile }}" hint-placeholder-val="{{ false }}">
+        <div class="kc-scroll" style="flex:1;overflow:auto;display:flex;flex-direction:column;">
+          <button onClick="{{ onActiveDownload }}" style="margin:16px 16px 4px;border-radius:4px;border:1px solid #EAE1D4;background-image:repeating-linear-gradient(135deg,#F4EEE4 0 14px,#FBF8F3 14px 28px);padding:34px 20px;display:flex;flex-direction:column;align-items:center;gap:13px;cursor:pointer;font-family:inherit;text-align:center;">
+            <span style="width:58px;height:58px;border-radius:6px;background:#FBF8F3;border:1px solid #EAE1D4;display:flex;align-items:center;justify-content:center;color:#4A5E22;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            </span>
+            <div style="font-size:15px;font-weight:700;color:#2A2520;">{{ activeType }} document</div>
+            <div style="font-size:13px;color:#857B70;line-height:1.4;">Tap to open the full document in your viewer</div>
+          </button>
+          <div style="padding:14px 18px 20px;">
+            <div style="font-size:14.5px;color:#3A342C;line-height:1.6;margin-bottom:20px;">{{ activeSummary }}</div>
+            <div style="display:flex;flex-direction:column;gap:13px;font-size:14px;">
+              <div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #F0E9DD;padding-bottom:13px;"><span style="color:#A79D90;">Type</span><span style="font-weight:600;text-align:right;">{{ activeDocType }}</span></div>
+              <div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #F0E9DD;padding-bottom:13px;"><span style="color:#A79D90;">Date</span><span style="font-weight:600;text-align:right;">{{ activeUpdated }}</span></div>
+              <div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #F0E9DD;padding-bottom:13px;"><span style="color:#A79D90;">Owner</span><span style="font-weight:600;text-align:right;">{{ activeAuthor }}</span></div>
+              <div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #F0E9DD;padding-bottom:13px;"><span style="color:#A79D90;">Size</span><span style="font-weight:600;text-align:right;">{{ activeSize }}</span></div>
+              <div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:#A79D90;">Collection</span><span style="font-weight:600;text-align:right;">{{ activeTags }}</span></div>
+            </div>
+            <div style="margin-top:20px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#A79D90;">Chicago citation</span><button onClick="{{ onCopyCitation }}" style="margin-left:auto;display:flex;align-items:center;gap:5px;height:30px;padding:0 11px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#4A5E22;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="1.5"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>Copy</button></div>
+              <div style="font-size:13.5px;line-height:1.65;color:#3A342C;font-family:Georgia,'Times New Roman',serif;background:#F7F2E8;border:1px solid #EAE1D4;border-radius:3px;padding:12px 13px;">{{ activeCitationEl }}</div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:none;border-top:1px solid #EAE1D4;background:#FBF7EC;padding:12px 16px;display:flex;flex-direction:column;gap:9px;">
+          <button onClick="{{ onAskAbout }}" style="display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:3px;border:none;background:#4A5E22;color:#fff;font-size:15px;font-weight:600;cursor:pointer;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2a7.5 7.5 0 0 1 5.96 12.06l4.24 4.24a1 1 0 0 1-1.41 1.41l-4.24-4.24A7.5 7.5 0 1 1 9.5 2z"/></svg>
+            Ask about this document
+          </button>
+          <div style="display:flex;gap:9px;">
+            <button onClick="{{ onActiveDownload }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;height:48px;border-radius:3px;border:1px solid #E3DACD;background:#FBF8F3;color:#3A342C;font-size:14.5px;font-weight:600;cursor:pointer;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>
+              Download
+            </button>
+            <sc-if value="{{ activeFaved }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ onActiveFav }}" title="Unfavorite" style="flex:none;width:52px;height:48px;border-radius:3px;border:1px solid #CFD8B0;background:#E9ECD7;color:#4A5E22;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 4h12a1 1 0 0 1 1 1v15l-7-4-7 4V5a1 1 0 0 1 1-1z"/></svg></button>
+            </sc-if>
+            <sc-if value="{{ activeNotFaved }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ onActiveFav }}" title="Favorite" style="flex:none;width:52px;height:48px;border-radius:3px;border:1px solid #E3DACD;background:#FBF8F3;color:#9A9085;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 4h12a1 1 0 0 1 1 1v15l-7-4-7 4V5a1 1 0 0 1 1-1z"/></svg></button>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ docDesktop }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;flex:1;min-height:0;">
         <div class="kc-scroll" style="flex:1;overflow:auto;padding:24px;">
           <div style="border-radius:3px;border:1px solid #EAE1D4;min-height:360px;background-image:repeating-linear-gradient(135deg,#F4EEE4 0 14px,#FBF8F3 14px 28px);display:flex;align-items:center;justify-content:center;">
@@ -471,10 +704,15 @@
         <div class="kc-scroll" style="width:300px;flex:none;border-left:1px solid #EAE1D4;overflow:auto;padding:22px 20px;display:flex;flex-direction:column;">
           <div style="font-size:13.5px;color:#5C544A;line-height:1.55;margin-bottom:20px;">{{ activeSummary }}</div>
           <div style="display:flex;flex-direction:column;gap:11px;font-size:13px;margin-bottom:22px;">
+            <div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:#A79D90;">Type</span><span style="font-weight:600;text-align:right;">{{ activeDocType }}</span></div>
             <div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:#A79D90;">Date</span><span style="font-weight:600;text-align:right;">{{ activeUpdated }}</span></div>
             <div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:#A79D90;">Owner</span><span style="font-weight:600;text-align:right;">{{ activeAuthor }}</span></div>
             <div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:#A79D90;">Size</span><span style="font-weight:600;text-align:right;">{{ activeSize }}</span></div>
             <div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:#A79D90;">Collection</span><span style="font-weight:600;text-align:right;">{{ activeTags }}</span></div>
+          </div>
+          <div style="margin-bottom:22px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#A79D90;">Chicago citation</span><button onClick="{{ onCopyCitation }}" style="margin-left:auto;display:flex;align-items:center;gap:5px;height:28px;padding:0 10px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#4A5E22;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;" style-hover="background:#F3ECE1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="1.5"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>Copy</button></div>
+            <div style="font-size:12.5px;line-height:1.6;color:#3A342C;font-family:Georgia,'Times New Roman',serif;background:#F7F2E8;border:1px solid #EAE1D4;border-radius:3px;padding:11px 12px;">{{ activeCitationEl }}</div>
           </div>
           <div style="display:flex;flex-direction:column;gap:9px;margin-top:auto;">
             <button onClick="{{ onAskAbout }}" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border-radius:3px;border:none;background:#4A5E22;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;" style-hover="background:#38491A">
@@ -495,6 +733,102 @@
             </div>
           </div>
         </div>
+      </div>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+
+<!-- EDIT COLLECTION MODAL -->
+<sc-if value="{{ editCollOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ onCloseEditColl }}" style="position:fixed;inset:0;background:rgba(42,30,20,.4);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px;z-index:62;animation:kc-fade .18s ease both;">
+    <div onClick="{{ stop }}" style="width:100%;max-width:440px;max-height:88vh;overflow:auto;background:#FBF8F3;border-radius:4px;box-shadow:0 16px 44px rgba(40,25,15,.3);animation:kc-pop .24s ease both;" class="kc-scroll">
+      <div style="display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid #EAE1D4;background:#FBF7EC;position:sticky;top:0;">
+        <h3 style="margin:0;font-size:17px;font-weight:700;flex:1;letter-spacing:-.01em;">Edit collection</h3>
+        <button onClick="{{ onCloseEditColl }}" style="width:34px;height:34px;border-radius:2px;border:none;background:#F2ECE2;color:#7A7064;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      </div>
+      <div style="padding:20px 22px;">
+        <label style="display:block;font-size:12.5px;font-weight:600;color:#5C544A;margin-bottom:6px;">Name</label>
+        <input value="{{ editCollName }}" onChange="{{ onEditCollName }}" style="width:100%;height:44px;padding:0 12px;border:1px solid #E3DACD;border-radius:3px;background:#FBF8F3;font-size:14.5px;color:#2A2520;outline:none;font-family:inherit;box-sizing:border-box;margin-bottom:16px;"/>
+        <label style="display:block;font-size:12.5px;font-weight:600;color:#5C544A;margin-bottom:6px;">Description</label>
+        <textarea value="{{ editCollDescription }}" onChange="{{ onEditCollDescription }}" placeholder="What this collection contains" style="width:100%;padding:10px 12px;border:1px solid #E3DACD;border-radius:3px;background:#FBF8F3;font-size:14px;color:#2A2520;outline:none;font-family:inherit;box-sizing:border-box;min-height:70px;resize:vertical;line-height:1.5;margin-bottom:16px;"></textarea>
+        <label style="display:block;font-size:12.5px;font-weight:600;color:#5C544A;margin-bottom:6px;">Internal notes</label>
+        <textarea value="{{ editCollNotes }}" onChange="{{ onEditCollNotes }}" placeholder="Notes for editors (not shown to researchers)" style="width:100%;padding:10px 12px;border:1px solid #E3DACD;border-radius:3px;background:#FBF8F3;font-size:14px;color:#2A2520;outline:none;font-family:inherit;box-sizing:border-box;min-height:60px;resize:vertical;line-height:1.5;margin-bottom:18px;"></textarea>
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid #EAE1D4;border-radius:3px;background:#FBF8F3;margin-bottom:20px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:600;">Researcher access</div>
+            <div style="font-size:12px;color:#A79D90;line-height:1.4;">When off, researchers can't see or search this collection.</div>
+          </div>
+          <button onClick="{{ onToggleEditCollAccess }}" style="{{ editCollAccessTrackStyle }}"><span style="{{ editCollAccessKnobStyle }}"></span></button>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button onClick="{{ onSaveEditColl }}" style="flex:1;height:46px;border-radius:3px;border:none;background:#4A5E22;color:#fff;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;" style-hover="background:#38491A">Save changes</button>
+          <button onClick="{{ onCloseEditColl }}" style="flex:none;height:46px;padding:0 18px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#2A2520;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;" style-hover="background:#F3ECE1">Cancel</button>
+        </div>
+        <button onClick="{{ onDeleteEditColl }}" style="width:100%;margin-top:10px;height:44px;border-radius:3px;border:1px solid #E9C9BF;background:transparent;color:#C0492F;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s;" style-hover="background:#F7E3DC">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6"/></svg>
+          Delete this collection
+        </button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<!-- EDIT DOCUMENT MODAL -->
+<sc-if value="{{ editDocOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ onCloseEditDoc }}" style="position:fixed;inset:0;background:rgba(42,30,20,.4);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px;z-index:62;animation:kc-fade .18s ease both;">
+    <div onClick="{{ stop }}" style="width:100%;max-width:440px;max-height:88vh;overflow:auto;background:#FBF8F3;border-radius:4px;box-shadow:0 16px 44px rgba(40,25,15,.3);animation:kc-pop .24s ease both;" class="kc-scroll">
+      <div style="display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid #EAE1D4;background:#FBF7EC;position:sticky;top:0;">
+        <h3 style="margin:0;font-size:17px;font-weight:700;flex:1;letter-spacing:-.01em;">Edit document details</h3>
+        <button onClick="{{ onCloseEditDoc }}" style="width:34px;height:34px;border-radius:2px;border:none;background:#F2ECE2;color:#7A7064;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      </div>
+      <div style="padding:20px 22px;">
+        <label style="display:block;font-size:12.5px;font-weight:600;color:#5C544A;margin-bottom:6px;">Title</label>
+        <input value="{{ editDocTitle }}" onChange="{{ onEditDocTitle }}" style="width:100%;height:44px;padding:0 12px;border:1px solid #E3DACD;border-radius:3px;background:#FBF8F3;font-size:14.5px;color:#2A2520;outline:none;font-family:inherit;box-sizing:border-box;margin-bottom:16px;"/>
+        <label style="display:block;font-size:12.5px;font-weight:600;color:#5C544A;margin-bottom:6px;">Summary</label>
+        <textarea value="{{ editDocSummary }}" onChange="{{ onEditDocSummary }}" style="width:100%;padding:10px 12px;border:1px solid #E3DACD;border-radius:3px;background:#FBF8F3;font-size:14px;color:#2A2520;outline:none;font-family:inherit;box-sizing:border-box;min-height:80px;resize:vertical;line-height:1.5;margin-bottom:16px;"></textarea>
+        <label style="display:block;font-size:12.5px;font-weight:600;color:#5C544A;margin-bottom:6px;">Document type</label>
+        <select value="{{ editDocType }}" onChange="{{ onEditDocType }}" style="width:100%;height:44px;padding:0 12px;border:1px solid #E3DACD;border-radius:3px;background:#FBF8F3;font-size:14.5px;color:#2A2520;outline:none;font-family:inherit;box-sizing:border-box;margin-bottom:6px;cursor:pointer;">
+          <sc-for list="{{ docTypeOptions }}" as="opt" hint-placeholder-count="13">
+            <option value="{{ opt }}">{{ opt }}</option>
+          </sc-for>
+        </select>
+        <p style="margin:0 0 16px;font-size:11.5px;color:#A79D90;line-height:1.45;">Citation fields follow the Chicago Manual of Style for this type.</p>
+
+        <div style="font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#A79D90;margin-bottom:11px;">Citation details</div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+          <sc-for list="{{ editCitationFields }}" as="f" hint-placeholder-count="6">
+            <div style="flex:1;min-width:140px;">
+              <label style="display:block;font-size:12.5px;font-weight:600;color:#5C544A;margin-bottom:6px;">{{ f.label }}</label>
+              <input value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;height:44px;padding:0 12px;border:1px solid #E3DACD;border-radius:3px;background:#FBF8F3;font-size:14.5px;color:#2A2520;outline:none;font-family:inherit;box-sizing:border-box;"/>
+            </div>
+          </sc-for>
+        </div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#A79D90;margin-bottom:7px;">Preview</div>
+        <div style="font-size:12.5px;line-height:1.6;color:#3A342C;font-family:Georgia,'Times New Roman',serif;background:#F7F2E8;border:1px solid #EAE1D4;border-radius:3px;padding:11px 12px;margin-bottom:20px;">{{ editCitationText }}</div>
+        <div style="display:flex;gap:10px;">
+          <button onClick="{{ onSaveEditDoc }}" style="flex:1;height:46px;border-radius:3px;border:none;background:#4A5E22;color:#fff;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;" style-hover="background:#38491A">Save changes</button>
+          <button onClick="{{ onCloseEditDoc }}" style="flex:none;height:46px;padding:0 18px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#2A2520;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;" style-hover="background:#F3ECE1">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<!-- CONFIRM DIALOG -->
+<sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ onConfirmNo }}" style="position:fixed;inset:0;background:rgba(42,30,20,.45);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px;z-index:70;animation:kc-fade .18s ease both;">
+    <div onClick="{{ stop }}" style="width:100%;max-width:400px;background:#FBF8F3;border-radius:4px;overflow:hidden;box-shadow:0 16px 44px rgba(40,25,15,.3);animation:kc-pop .24s ease both;">
+      <div style="padding:24px 24px 20px;">
+        <div style="width:42px;height:42px;border-radius:3px;background:#F7E3DC;display:flex;align-items:center;justify-content:center;margin-bottom:15px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C0492F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        </div>
+        <h3 style="margin:0 0 8px;font-size:18px;font-weight:700;letter-spacing:-.01em;">{{ confirmTitle }}</h3>
+        <p style="margin:0;color:#7A7064;font-size:14px;line-height:1.55;">{{ confirmMessage }}</p>
+      </div>
+      <div style="display:flex;gap:10px;padding:0 24px 22px;">
+        <button onClick="{{ onConfirmNo }}" style="flex:1;height:46px;border-radius:3px;border:1px solid #E3DACD;background:#FBF7EC;color:#2A2520;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;" style-hover="background:#F3ECE1">Cancel</button>
+        <button onClick="{{ onConfirmYes }}" style="flex:1;height:46px;border-radius:3px;border:none;background:#C0492F;color:#fff;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;" style-hover="background:#A33C25">{{ confirmLabel }}</button>
       </div>
     </div>
   </div>
@@ -533,13 +867,39 @@ class Component extends DCLogic {
       typeFilter: 'all',
       viewMode: 'grid',
       documents: this.getDocs(),
+      collections: this.getCollections(),
+      openCollection: null,
+      editingColl: null,
+      editColl: null,
+      editingDoc: null,
+      editDoc: null,
+      uploadTarget: 'Long Trail News',
+      newCollName: '',
+      confirm: null,
       uploads: [],
       dragOver: false,
+      vw: (typeof window !== 'undefined' ? window.innerWidth : 1280),
+      drawerOpen: false,
+      sheetOpen: false,
+      collModalOpen: false,
       authView: 'login',
       reqName: '', reqEmail: '', reqAffil: '', reqReason: '', reqSubmitted: false, reqError: false,
       docOpenId: null,
       toast: { msg: '', visible: false }
     };
+  }
+
+  componentDidMount() {
+    this._onResize = () => {
+      const w = window.innerWidth;
+      this.setState(s => {
+        if (w === s.vw) return null;
+        const next = { vw: w };
+        if (w >= 768) { next.drawerOpen = false; next.sheetOpen = false; }
+        return next;
+      });
+    };
+    window.addEventListener('resize', this._onResize);
   }
 
   componentDidUpdate() {
@@ -556,29 +916,30 @@ class Component extends DCLogic {
   componentWillUnmount() {
     this._iv.forEach(clearInterval);
     if (this._toast) clearTimeout(this._toast);
+    if (this._onResize) window.removeEventListener('resize', this._onResize);
   }
 
   getDocs() {
     return [
-      { id: 'g1', title: 'Long Trail News — Summer 1965', type: 'pdf', collection: 'Long Trail News', tags: ['magazine', 'quarterly', '1965', 'trail conditions', 'club news'], summary: "The club's quarterly magazine — section reports, trail conditions, and member notes from the summer of 1965.", date: 'Summer 1965', author: 'GMC Publications', size: '5.2 MB', pages: 24 },
-      { id: 'g2', title: 'Long Trail News — Centennial Issue', type: 'pdf', collection: 'Long Trail News', tags: ['magazine', 'centennial', 'anniversary', '2010', 'history'], summary: 'A commemorative issue marking 100 years of the Green Mountain Club, with archival photographs and first-hand accounts.', date: 'Spring 2010', author: 'GMC Publications', size: '12.4 MB', pages: 48 },
-      { id: 'g3', title: 'Long Trail News — Winter 1978', type: 'pdf', collection: 'Long Trail News', tags: ['magazine', 'winter', '1978', 'conservation'], summary: "Winter conditions, shelter maintenance updates, and a feature on the club's growing conservation work.", date: 'Winter 1978', author: 'GMC Publications', size: '4.8 MB', pages: 20 },
-      { id: 'g4', title: 'Ridgelines — Spring 1992', type: 'pdf', collection: 'Ridgelines', tags: ['newsletter', '1992', 'conservation', 'land protection'], summary: 'Conservation and land-protection newsletter covering easements and ridgeline acquisitions.', date: 'Spring 1992', author: 'GMC Conservation', size: '2.1 MB', pages: 12 },
-      { id: 'g5', title: 'The Long Trail Guide — 18th Edition', type: 'doc', collection: 'Long Trail Guide Books', tags: ['guidebook', '1971', 'mileage', 'shelters', 'route'], summary: 'The definitive end-to-end guidebook: section-by-section mileages, shelters, water sources, and side trails.', date: '1971', author: 'Green Mountain Club', size: '6.7 MB', pages: 220 },
-      { id: 'g6', title: 'Guide Book of the Long Trail — 1930', type: 'pdf', collection: 'Long Trail Guide Books', tags: ['guidebook', '1930', 'first edition', 'completion', 'history'], summary: 'Published the year the Long Trail was completed, documenting the finished route, mileages, and shelters.', date: '1930', author: 'Green Mountain Club', size: '9.0 MB', pages: 156 },
-      { id: 'g7', title: 'Sterling Stomper — Fall 1988', type: 'pdf', collection: 'Sterling Stomper', tags: ['newsletter', 'sterling section', '1988', 'outings'], summary: 'The Sterling Section newsletter — fall outing schedules, work-trip recaps, and member milestones.', date: 'Fall 1988', author: 'Sterling Section', size: '1.6 MB', pages: 8 },
-      { id: 'g8', title: 'USF Trail Maintenance Records — 1968', type: 'doc', collection: 'USF', tags: ['forest service', 'maintenance', 'agreement', '1968', 'records'], summary: 'Cooperative maintenance records and correspondence between the club and the U.S. Forest Service.', date: '1968', author: 'GMC Archives', size: '3.3 MB', pages: 34 },
-      { id: 'g9', title: 'Trail Talk — Bread Loaf Section, 1995', type: 'pdf', collection: 'Trail Talk', tags: ['newsletter', 'bread loaf section', '1995'], summary: 'Bread Loaf Section newsletter with trip reports, trail adoptions, and section business.', date: 'Summer 1995', author: 'Bread Loaf Section', size: '1.9 MB', pages: 10 },
-      { id: 'g10', title: 'Smoke & Blazes — Burlington Section, 1957', type: 'pdf', collection: 'Smoke & Blazes', tags: ['newsletter', 'burlington section', '1957', 'outings'], summary: "The Burlington Section's newsletter covering outings, work parties, and lodge upkeep.", date: '1957', author: 'Burlington Section', size: '2.4 MB', pages: 14 },
-      { id: 'g11', title: 'The Stepping Stone — Montpelier Section, 1983', type: 'pdf', collection: 'The Stepping Stone', tags: ['newsletter', 'montpelier section', '1983'], summary: 'Montpelier Section newsletter with hike calendars and trail-stewardship notes.', date: 'Fall 1983', author: 'Montpelier Section', size: '1.4 MB', pages: 8 },
-      { id: 'g12', title: 'Ramblings — Killington Section, 1990', type: 'pdf', collection: 'Ramblings', tags: ['newsletter', 'killington section', '1990'], summary: 'Killington Section newsletter — outing recaps, shelter reports, and volunteer recognition.', date: 'Spring 1990', author: 'Killington Section', size: '1.7 MB', pages: 9 },
-      { id: 'g13', title: 'Footnotes — Worcester Section, 2001', type: 'pdf', collection: 'Footnotes', tags: ['newsletter', 'worcester section', '2001'], summary: 'Worcester Section newsletter covering trail work, membership, and upcoming events.', date: 'Winter 2001', author: 'Worcester Section', size: '2.0 MB', pages: 11 },
-      { id: 'g14', title: 'The Crumb — Bread Loaf Section, 1979', type: 'pdf', collection: 'The Crumb', tags: ['newsletter', 'bread loaf section', '1979'], summary: 'An early Bread Loaf Section bulletin with trip notes and trail-maintenance assignments.', date: '1979', author: 'Bread Loaf Section', size: '1.2 MB', pages: 6 },
-      { id: 'g15', title: 'Long Trail End-to-End Map — 1985', type: 'img', collection: 'Maps', tags: ['map', 'end-to-end', 'route', '1985', 'mileage'], summary: 'A folding overview map of the full Massachusetts-to-Canada route with mileages and shelter spacing.', date: '1985', author: 'GMC Cartography', size: '8.9 MB', pages: 1 },
-      { id: 'g16', title: "Camel's Hump Region Trail Map — 1962", type: 'img', collection: 'Maps', tags: ['map', 'camels hump', 'trails', '1962', 'region'], summary: "Detailed regional map of the trail network around Camel's Hump, including approaches and side trails.", date: '1962', author: 'GMC Cartography', size: '7.1 MB', pages: 1 },
-      { id: 'g17', title: "Camel's Hump Summit, ca. 1920", type: 'img', collection: 'Photos', tags: ['photograph', 'camels hump', 'summit', '1920', 'historic'], summary: "An early glass-plate photograph of the bare alpine summit of Camel's Hump, predating the completed trail.", date: 'ca. 1920', author: 'GMC Archives', size: '4.5 MB', pages: 1 },
-      { id: 'g18', title: 'Taylor Lodge Construction, 1933', type: 'img', collection: 'Photos', tags: ['photograph', 'taylor lodge', 'shelter', 'construction', '1933', 'ccc'], summary: 'Construction photographs of Taylor Lodge, showing the original timber shelter being raised in 1933.', date: '1933', author: 'GMC Archives', size: '5.8 MB', pages: 1 }
-    ];
+      { id: 'g1', docType: 'Magazine', title: 'Long Trail News — Summer 1965', type: 'pdf', collection: 'Long Trail News', tags: ['magazine', 'quarterly', '1965', 'trail conditions', 'club news'], summary: "The club's quarterly magazine — section reports, trail conditions, and member notes from the summer of 1965.", date: 'Summer 1965', author: 'GMC Publications', size: '5.2 MB', pages: 24 },
+      { id: 'g2', docType: 'Magazine', title: 'Long Trail News — Centennial Issue', type: 'pdf', collection: 'Long Trail News', tags: ['magazine', 'centennial', 'anniversary', '2010', 'history'], summary: 'A commemorative issue marking 100 years of the Green Mountain Club, with archival photographs and first-hand accounts.', date: 'Spring 2010', author: 'GMC Publications', size: '12.4 MB', pages: 48 },
+      { id: 'g3', docType: 'Magazine', title: 'Long Trail News — Winter 1978', type: 'pdf', collection: 'Long Trail News', tags: ['magazine', 'winter', '1978', 'conservation'], summary: "Winter conditions, shelter maintenance updates, and a feature on the club's growing conservation work.", date: 'Winter 1978', author: 'GMC Publications', size: '4.8 MB', pages: 20 },
+      { id: 'g4', docType: 'Newsletter', title: 'Ridgelines — Spring 1992', type: 'pdf', collection: 'Ridgelines', tags: ['newsletter', '1992', 'conservation', 'land protection'], summary: 'Conservation and land-protection newsletter covering easements and ridgeline acquisitions.', date: 'Spring 1992', author: 'GMC Conservation', size: '2.1 MB', pages: 12 },
+      { id: 'g5', docType: 'Book', title: 'The Long Trail Guide — 18th Edition', type: 'doc', collection: 'Long Trail Guide Books', tags: ['guidebook', '1971', 'mileage', 'shelters', 'route'], summary: 'The definitive end-to-end guidebook: section-by-section mileages, shelters, water sources, and side trails.', date: '1971', author: 'Green Mountain Club', size: '6.7 MB', pages: 220 },
+      { id: 'g6', docType: 'Book', title: 'Guide Book of the Long Trail — 1930', type: 'pdf', collection: 'Long Trail Guide Books', tags: ['guidebook', '1930', 'first edition', 'completion', 'history'], summary: 'Published the year the Long Trail was completed, documenting the finished route, mileages, and shelters.', date: '1930', author: 'Green Mountain Club', size: '9.0 MB', pages: 156 },
+      { id: 'g7', docType: 'Newsletter', title: 'Sterling Stomper — Fall 1988', type: 'pdf', collection: 'Sterling Stomper', tags: ['newsletter', 'sterling section', '1988', 'outings'], summary: 'The Sterling Section newsletter — fall outing schedules, work-trip recaps, and member milestones.', date: 'Fall 1988', author: 'Sterling Section', size: '1.6 MB', pages: 8 },
+      { id: 'g8', docType: 'Archival Document', title: 'USF Trail Maintenance Records — 1968', type: 'doc', collection: 'USF', tags: ['forest service', 'maintenance', 'agreement', '1968', 'records'], summary: 'Cooperative maintenance records and correspondence between the club and the U.S. Forest Service.', date: '1968', author: 'GMC Archives', size: '3.3 MB', pages: 34 },
+      { id: 'g9', docType: 'Newsletter', title: 'Trail Talk — Bread Loaf Section, 1995', type: 'pdf', collection: 'Trail Talk', tags: ['newsletter', 'bread loaf section', '1995'], summary: 'Bread Loaf Section newsletter with trip reports, trail adoptions, and section business.', date: 'Summer 1995', author: 'Bread Loaf Section', size: '1.9 MB', pages: 10 },
+      { id: 'g10', docType: 'Newsletter', title: 'Smoke & Blazes — Burlington Section, 1957', type: 'pdf', collection: 'Smoke & Blazes', tags: ['newsletter', 'burlington section', '1957', 'outings'], summary: "The Burlington Section's newsletter covering outings, work parties, and lodge upkeep.", date: '1957', author: 'Burlington Section', size: '2.4 MB', pages: 14 },
+      { id: 'g11', docType: 'Newsletter', title: 'The Stepping Stone — Montpelier Section, 1983', type: 'pdf', collection: 'The Stepping Stone', tags: ['newsletter', 'montpelier section', '1983'], summary: 'Montpelier Section newsletter with hike calendars and trail-stewardship notes.', date: 'Fall 1983', author: 'Montpelier Section', size: '1.4 MB', pages: 8 },
+      { id: 'g12', docType: 'Newsletter', title: 'Ramblings — Killington Section, 1990', type: 'pdf', collection: 'Ramblings', tags: ['newsletter', 'killington section', '1990'], summary: 'Killington Section newsletter — outing recaps, shelter reports, and volunteer recognition.', date: 'Spring 1990', author: 'Killington Section', size: '1.7 MB', pages: 9 },
+      { id: 'g13', docType: 'Newsletter', title: 'Footnotes — Worcester Section, 2001', type: 'pdf', collection: 'Footnotes', tags: ['newsletter', 'worcester section', '2001'], summary: 'Worcester Section newsletter covering trail work, membership, and upcoming events.', date: 'Winter 2001', author: 'Worcester Section', size: '2.0 MB', pages: 11 },
+      { id: 'g14', docType: 'Newsletter', title: 'The Crumb — Bread Loaf Section, 1979', type: 'pdf', collection: 'The Crumb', tags: ['newsletter', 'bread loaf section', '1979'], summary: 'An early Bread Loaf Section bulletin with trip notes and trail-maintenance assignments.', date: '1979', author: 'Bread Loaf Section', size: '1.2 MB', pages: 6 },
+      { id: 'g15', docType: 'Map', title: 'Long Trail End-to-End Map — 1985', type: 'img', collection: 'Maps', tags: ['map', 'end-to-end', 'route', '1985', 'mileage'], summary: 'A folding overview map of the full Massachusetts-to-Canada route with mileages and shelter spacing.', date: '1985', author: 'GMC Cartography', size: '8.9 MB', pages: 1 },
+      { id: 'g16', docType: 'Map', title: "Camel's Hump Region Trail Map — 1962", type: 'img', collection: 'Maps', tags: ['map', 'camels hump', 'trails', '1962', 'region'], summary: "Detailed regional map of the trail network around Camel's Hump, including approaches and side trails.", date: '1962', author: 'GMC Cartography', size: '7.1 MB', pages: 1 },
+      { id: 'g17', docType: 'Photograph', title: "Camel's Hump Summit, ca. 1920", type: 'img', collection: 'Photos', tags: ['photograph', 'camels hump', 'summit', '1920', 'historic'], summary: "An early glass-plate photograph of the bare alpine summit of Camel's Hump, predating the completed trail.", date: 'ca. 1920', author: 'GMC Archives', size: '4.5 MB', pages: 1 },
+      { id: 'g18', docType: 'Photograph', title: 'Taylor Lodge Construction, 1933', type: 'img', collection: 'Photos', tags: ['photograph', 'taylor lodge', 'shelter', 'construction', '1933', 'ccc'], summary: 'Construction photographs of Taylor Lodge, showing the original timber shelter being raised in 1933.', date: '1933', author: 'GMC Archives', size: '5.8 MB', pages: 1 }
+    ].map(d => ({ ...d, citation: this.seedCitation(d) }));
   }
 
   typeLabel(t) {
@@ -586,6 +947,168 @@ class Component extends DCLogic {
   }
   docById(id) { return this.state.documents.find(d => d.id === id); }
   userName() { return 'Maya Rivera'; }
+
+  // ---- Chicago citation schemas (vary by document type) ----
+  citationTypes() {
+    return ['Book', 'Magazine', 'Newsletter', 'Journal', 'Interview', 'Video & Multimedia', 'Photograph', 'Theses & Dissertations', 'Conference Paper', 'Art & Images', 'Music & Audio', 'Map', 'Archival Document'];
+  }
+  citationSchema(type) {
+    const S = {
+      'Book': [{ key: 'author', label: 'Author' }, { key: 'title', label: 'Title' }, { key: 'edition', label: 'Edition' }, { key: 'place', label: 'Place of publication' }, { key: 'publisher', label: 'Publisher' }, { key: 'year', label: 'Year' }],
+      'Magazine': [{ key: 'magazine', label: 'Magazine title' }, { key: 'date', label: 'Issue date' }, { key: 'url', label: 'URL / DOI' }],
+      'Newsletter': [{ key: 'newsletter', label: 'Newsletter title' }, { key: 'section', label: 'Section / chapter' }, { key: 'date', label: 'Issue date' }],
+      'Journal': [{ key: 'journal', label: 'Journal title' }, { key: 'volume', label: 'Volume' }, { key: 'issue', label: 'Issue no.' }, { key: 'year', label: 'Year' }, { key: 'doi', label: 'DOI / URL' }],
+      'Interview': [{ key: 'interviewee', label: 'Interviewee' }, { key: 'interviewer', label: 'Interviewer' }, { key: 'medium', label: 'Medium / format' }, { key: 'place', label: 'Place' }, { key: 'date', label: 'Date' }],
+      'Video & Multimedia': [{ key: 'title', label: 'Title' }, { key: 'contributors', label: 'Director / contributors' }, { key: 'format', label: 'Format' }, { key: 'publisher', label: 'Publisher / platform' }, { key: 'year', label: 'Year' }, { key: 'duration', label: 'Duration' }, { key: 'url', label: 'URL' }],
+      'Photograph': [{ key: 'photographer', label: 'Photographer' }, { key: 'title', label: 'Title / description' }, { key: 'date', label: 'Date' }, { key: 'medium', label: 'Medium' }, { key: 'collection', label: 'Collection' }, { key: 'repository', label: 'Repository' }, { key: 'location', label: 'Location' }],
+      'Theses & Dissertations': [{ key: 'author', label: 'Author' }, { key: 'title', label: 'Title' }, { key: 'degree', label: 'Degree (e.g. PhD diss.)' }, { key: 'institution', label: 'Institution' }, { key: 'year', label: 'Year' }],
+      'Conference Paper': [{ key: 'author', label: 'Author' }, { key: 'title', label: 'Paper title' }, { key: 'conference', label: 'Conference name' }, { key: 'location', label: 'Location' }, { key: 'date', label: 'Date' }],
+      'Art & Images': [{ key: 'artist', label: 'Artist' }, { key: 'title', label: 'Title' }, { key: 'date', label: 'Date' }, { key: 'medium', label: 'Medium' }, { key: 'dimensions', label: 'Dimensions' }, { key: 'repository', label: 'Repository' }, { key: 'location', label: 'Location' }],
+      'Music & Audio': [{ key: 'artist', label: 'Composer / artist' }, { key: 'title', label: 'Title' }, { key: 'performers', label: 'Performers' }, { key: 'format', label: 'Format' }, { key: 'label', label: 'Label' }, { key: 'year', label: 'Year' }],
+      'Map': [{ key: 'cartographer', label: 'Cartographer / author' }, { key: 'title', label: 'Title' }, { key: 'scale', label: 'Scale' }, { key: 'place', label: 'Place of publication' }, { key: 'publisher', label: 'Publisher' }, { key: 'year', label: 'Year' }],
+      'Archival Document': [{ key: 'author', label: 'Author / creator' }, { key: 'title', label: 'Title / description' }, { key: 'date', label: 'Date' }, { key: 'collection', label: 'Collection' }, { key: 'boxFolder', label: 'Box / folder' }, { key: 'repository', label: 'Repository' }]
+    };
+    return S[type] || S['Book'];
+  }
+  seedCitation(doc) {
+    const ym = (doc.date || '').match(/\d{4}/);
+    const year = ym ? ym[0] : (doc.date || '');
+    const pub = 'Green Mountain Club', place = 'Waterbury Center, VT', repo = 'GMC Archives, Waterbury Center, VT';
+    const pages = doc.pages && doc.pages > 1 ? '1\u2013' + doc.pages : '';
+    const baseTitle = (doc.title.split('\u2014')[0] || doc.title).trim();
+    switch (doc.docType) {
+      case 'Book': return { author: doc.author || pub, title: doc.title, edition: '', place, publisher: pub, year };
+      case 'Magazine': return { magazine: doc.collection || baseTitle, date: doc.date, url: '' };
+      case 'Newsletter': return { newsletter: baseTitle, section: '', date: doc.date };
+      case 'Journal': return { journal: doc.collection || baseTitle, volume: '', issue: '', year, doi: '' };
+      case 'Map': return { cartographer: doc.author || pub, title: doc.title, scale: '', place, publisher: pub, year };
+      case 'Photograph': return { photographer: doc.author || 'Unknown', title: doc.title, date: doc.date, medium: 'Photograph', collection: doc.collection, repository: repo, location: '' };
+      case 'Archival Document': return { author: doc.author || pub, title: doc.title, date: doc.date, collection: doc.collection, boxFolder: '', repository: repo };
+      default: return { author: doc.author || '', title: doc.title, date: doc.date, year, place, publisher: pub };
+    }
+  }
+  formatCitation(type, c) {
+    c = c || {};
+    const segs = [];
+    const t = (s) => { if (s != null && s !== '') segs.push({ t: String(s) }); };
+    const i = (s) => { if (s != null && s !== '') segs.push({ t: String(s), i: true }); };
+    const has = (k) => c[k] != null && String(c[k]).trim() !== '';
+    switch (type) {
+      case 'Book':
+        if (has('author')) t(c.author + '. ');
+        i(c.title); t('. ');
+        if (has('edition')) t(c.edition + '. ');
+        if (has('place')) t(c.place + ': ');
+        if (has('publisher')) t(c.publisher + ', ');
+        t((c.year || 'n.d.') + '.');
+        break;
+      case 'Magazine':
+        i(c.magazine);
+        if (has('date')) t(', ' + c.date);
+        t('.');
+        if (has('url')) t(' ' + c.url + '.');
+        break;
+      case 'Newsletter':
+        i(c.newsletter);
+        if (has('section')) t(' (' + c.section + ')');
+        if (has('date')) t(', ' + c.date);
+        t('.');
+        break;
+      case 'Journal':
+        i(c.journal);
+        if (has('volume')) t(' ' + c.volume);
+        if (has('issue')) t(', no. ' + c.issue);
+        if (has('year')) t(' (' + c.year + ')');
+        t('.');
+        if (has('doi')) t(' ' + c.doi + '.');
+        break;
+      case 'Interview':
+        if (has('interviewee')) t(c.interviewee + '. ');
+        t(has('interviewer') ? 'Interview by ' + c.interviewer + '. ' : 'Interview. ');
+        if (has('medium')) t(c.medium + '. ');
+        if (has('place')) t(c.place + ', ');
+        t((c.date || 'n.d.') + '.');
+        break;
+      case 'Video & Multimedia':
+        i(c.title); t('. ');
+        if (has('contributors')) t('Directed by ' + c.contributors + '. ');
+        if (has('format')) t(c.format + '. ');
+        if (has('publisher')) t(c.publisher + ', ');
+        t((c.year || 'n.d.') + '.');
+        if (has('duration')) t(' ' + c.duration + '.');
+        if (has('url')) t(' ' + c.url + '.');
+        break;
+      case 'Photograph':
+        if (has('photographer')) t(c.photographer + '. ');
+        i(c.title); t('. ');
+        if (has('date')) t(c.date + '. ');
+        if (has('medium')) t(c.medium + '. ');
+        if (has('collection')) t(c.collection + '. ');
+        if (has('repository')) t(c.repository);
+        if (has('location')) t(', ' + c.location);
+        t('.');
+        break;
+      case 'Theses & Dissertations':
+        if (has('author')) t(c.author + '. ');
+        t('\u201C' + (c.title || '') + '.\u201D ');
+        t((c.degree || 'PhD diss.') + ', ');
+        if (has('institution')) t(c.institution + ', ');
+        t((c.year || 'n.d.') + '.');
+        break;
+      case 'Conference Paper':
+        if (has('author')) t(c.author + '. ');
+        t('\u201C' + (c.title || '') + '.\u201D ');
+        t('Paper presented at ' + (c.conference || ''));
+        if (has('location')) t(', ' + c.location);
+        if (has('date')) t(', ' + c.date);
+        t('.');
+        break;
+      case 'Art & Images':
+        if (has('artist')) t(c.artist + '. ');
+        i(c.title); t('. ');
+        if (has('date')) t(c.date + '. ');
+        if (has('medium')) t(c.medium);
+        if (has('dimensions')) t(', ' + c.dimensions);
+        t('. ');
+        if (has('repository')) t(c.repository);
+        if (has('location')) t(', ' + c.location);
+        t('.');
+        break;
+      case 'Music & Audio':
+        if (has('artist')) t(c.artist + '. ');
+        i(c.title); t('. ');
+        if (has('performers')) t(c.performers + '. ');
+        if (has('format')) t(c.format + '. ');
+        if (has('label')) t(c.label + ', ');
+        t((c.year || 'n.d.') + '.');
+        break;
+      case 'Map':
+        if (has('cartographer')) t(c.cartographer + '. ');
+        i(c.title); t('. ');
+        if (has('scale')) t(c.scale + '. ');
+        if (has('place')) t(c.place + ': ');
+        if (has('publisher')) t(c.publisher + ', ');
+        t((c.year || 'n.d.') + '.');
+        break;
+      case 'Archival Document':
+        if (has('author')) t(c.author + '. ');
+        t('\u201C' + (c.title || '') + '.\u201D ');
+        if (has('date')) t(c.date + '. ');
+        if (has('collection')) t(c.collection);
+        if (has('boxFolder')) t(', ' + c.boxFolder);
+        t('. ');
+        if (has('repository')) t(c.repository + '.');
+        break;
+      default:
+        i(c.title); t('.');
+    }
+    return { segments: segs, text: segs.map(s => s.t).join('') };
+  }
+  citationEl(doc) {
+    if (!doc) return null;
+    const { segments } = this.formatCitation(doc.docType, doc.citation);
+    return React.createElement('span', null, segments.map((s, idx) => s.i ? React.createElement('em', { key: idx }, s.t) : React.createElement(React.Fragment, { key: idx }, s.t)));
+  }
 
   seedMessages() {
     return [
@@ -656,13 +1179,13 @@ class Component extends DCLogic {
   newChat() { this.setState({ messages: [], draft: '', thinking: false }); }
 
   toggleFav(id) {
+    const wasFav = this.state.favs.includes(id);
     this.setState(s => {
       const has = s.favs.includes(id);
       return { favs: has ? s.favs.filter(x => x !== id) : [...s.favs, id] };
     });
     const d = this.docById(id);
-    const nowFav = !this.state.favs.includes(id);
-    if (d) this.showToast(nowFav ? `Added "${d.title}" to favorites` : `Removed "${d.title}" from favorites`);
+    if (d) this.showToast(wasFav ? `Removed "${d.title}" from favorites` : `Added "${d.title}" to favorites`);
   }
   openDoc(id) { this.setState({ docOpenId: id }); }
   closeDoc() { this.setState({ docOpenId: null }); }
@@ -671,6 +1194,125 @@ class Component extends DCLogic {
     const d = this.docById(id);
     this.setState(s => ({ documents: s.documents.filter(x => x.id !== id), favs: s.favs.filter(x => x !== id) }));
     if (d) this.showToast(`Deleted "${d.title}"`);
+  }
+  requestDeleteDoc(id) {
+    const d = this.docById(id);
+    if (!d) return;
+    this.askConfirm({
+      title: 'Delete document?',
+      message: '"' + d.title + '" will be permanently removed from the catalog. This action cannot be undone.',
+      confirmLabel: 'Delete document',
+      action: () => this.deleteDoc(id)
+    });
+  }
+
+  askConfirm(opts) { this.setState({ confirm: opts }); }
+  closeConfirm() { this.setState({ confirm: null }); }
+
+  getCollections() {
+    const meta = {
+      'Long Trail News': 'The club\'s flagship quarterly magazine — section reports, trail conditions, and member news.',
+      'Ridgelines': 'Conservation and land-protection newsletter covering easements and ridgeline acquisitions.',
+      'Long Trail Guide Books': 'Successive editions of the official end-to-end guidebook.',
+      'Sterling Stomper': 'Newsletter of the Sterling Section.',
+      'USF': 'Cooperative records and correspondence with the U.S. Forest Service.',
+      'Trail Talk': 'Newsletter of the Bread Loaf Section.',
+      'Smoke & Blazes': 'Newsletter of the Burlington Section.',
+      'The Stepping Stone': 'Newsletter of the Montpelier Section.',
+      'Ramblings': 'Newsletter of the Killington Section.',
+      'Footnotes': 'Newsletter of the Worcester Section.',
+      'The Crumb': 'Early bulletin of the Bread Loaf Section.',
+      'Maps': 'Historical trail and regional maps.',
+      'Photos': 'Archival photographs and glass-plate images.'
+    };
+    return Object.keys(meta).map(name => ({ name, description: meta[name], notes: '', researcherAccess: true }));
+  }
+  collByName(name) { return this.state.collections.find(c => c.name === name); }
+
+  createCollection() {
+    const name = (this.state.newCollName || '').trim();
+    if (!name) return;
+    if (this.state.collections.some(c => c.name.toLowerCase() === name.toLowerCase())) { this.showToast('"' + name + '" already exists'); return; }
+    this.setState(s => ({ collections: [...s.collections, { name, description: '', notes: '', researcherAccess: true }], newCollName: '', uploadTarget: name }));
+    this.showToast('Created collection "' + name + '"');
+  }
+  requestDeleteCollection(name) {
+    const count = this.state.documents.filter(d => d.collection === name).length;
+    this.askConfirm({
+      title: 'Delete "' + name + '"?',
+      message: count > 0
+        ? 'This collection and its ' + count + ' document' + (count === 1 ? '' : 's') + ' will be permanently removed. This action cannot be undone.'
+        : 'This empty collection will be permanently removed. This action cannot be undone.',
+      confirmLabel: 'Delete collection',
+      action: () => this.deleteCollection(name)
+    });
+  }
+  deleteCollection(name) {
+    this.setState(s => {
+      const removedIds = s.documents.filter(d => d.collection === name).map(d => d.id);
+      const remaining = s.collections.filter(c => c.name !== name);
+      return {
+        collections: remaining,
+        documents: s.documents.filter(d => d.collection !== name),
+        favs: s.favs.filter(f => !removedIds.includes(f)),
+        typeFilter: s.typeFilter === name ? 'all' : s.typeFilter,
+        uploadTarget: s.uploadTarget === name ? (remaining[0] ? remaining[0].name : '') : s.uploadTarget,
+        openCollection: s.openCollection === name ? null : s.openCollection,
+        editingColl: null, editColl: null
+      };
+    });
+    this.showToast('Deleted collection "' + name + '"');
+  }
+
+  openColl(name) { this.setState({ openCollection: name, route: 'collections', drawerOpen: false }); }
+  backToCollections() { this.setState({ openCollection: null }); }
+
+  startEditColl(name) {
+    const c = this.collByName(name);
+    if (!c) return;
+    this.setState({ editingColl: name, editColl: { name: c.name, description: c.description || '', notes: c.notes || '', researcherAccess: c.researcherAccess !== false } });
+  }
+  closeEditColl() { this.setState({ editingColl: null, editColl: null }); }
+  saveEditColl() {
+    const orig = this.state.editingColl;
+    const d = this.state.editColl;
+    if (!d) return;
+    const name = (d.name || '').trim();
+    if (!name) { this.showToast('Collection name is required'); return; }
+    if (name.toLowerCase() !== orig.toLowerCase() && this.state.collections.some(c => c.name.toLowerCase() === name.toLowerCase())) { this.showToast('"' + name + '" already exists'); return; }
+    this.setState(s => ({
+      collections: s.collections.map(c => c.name === orig ? { name, description: d.description, notes: d.notes, researcherAccess: d.researcherAccess } : c),
+      documents: name !== orig ? s.documents.map(doc => doc.collection === orig ? { ...doc, collection: name } : doc) : s.documents,
+      uploadTarget: s.uploadTarget === orig ? name : s.uploadTarget,
+      openCollection: s.openCollection === orig ? name : s.openCollection,
+      typeFilter: s.typeFilter === orig ? name : s.typeFilter,
+      editingColl: null, editColl: null
+    }));
+    this.showToast('Saved "' + name + '"');
+  }
+
+  startEditDoc(id) {
+    const doc = this.docById(id);
+    if (!doc) return;
+    this.setState({ editingDoc: id, editDoc: { title: doc.title, summary: doc.summary || '', docType: doc.docType || 'Book', citation: { ...(doc.citation || this.seedCitation(doc)) } } });
+  }
+  closeEditDoc() { this.setState({ editingDoc: null, editDoc: null }); }
+  saveEditDoc() {
+    const id = this.state.editingDoc;
+    const d = this.state.editDoc;
+    if (!id || !d) return;
+    const title = (d.title || '').trim();
+    if (!title) { this.showToast('Title is required'); return; }
+    const c = d.citation || {};
+    const dateKeys = ['date', 'year'], authorKeys = ['author', 'photographer', 'cartographer', 'artist', 'interviewee'];
+    let nd = '', na = '';
+    for (const k of dateKeys) { if (c[k]) { nd = c[k]; break; } }
+    for (const k of authorKeys) { if (c[k]) { na = c[k]; break; } }
+    this.setState(s => ({
+      documents: s.documents.map(doc => doc.id === id ? { ...doc, title, summary: d.summary, docType: d.docType, citation: c, date: nd || doc.date, author: na || doc.author } : doc),
+      editingDoc: null, editDoc: null
+    }));
+    this.showToast('Saved changes');
   }
 
   showToast(msg) {
@@ -684,12 +1326,13 @@ class Component extends DCLogic {
     return m[ext] || 'doc';
   }
   startUpload() {
+    const target = this.state.openCollection || this.state.uploadTarget || (this.state.collections[0] && this.state.collections[0].name) || 'Footnotes';
     const name = this._uq[this._uqi % this._uq.length];
     this._uqi++;
     const ext = name.split('.').pop().toLowerCase();
     const type = this.extToType(ext);
     const id = 'u' + Date.now() + Math.floor(Math.random() * 999);
-    this.setState(s => ({ uploads: [{ id, name, type, progress: 4, status: 'uploading' }, ...s.uploads] }));
+    this.setState(s => ({ uploads: [{ id, name, type, collection: target, progress: 4, status: 'uploading' }, ...s.uploads] }));
     const iv = setInterval(() => {
       this.setState(s => {
         let finished = false;
@@ -701,7 +1344,7 @@ class Component extends DCLogic {
         });
         if (finished) {
           clearInterval(iv);
-          const nd = { id, title: name.replace(/\.[^.]+$/, ''), type, tags: ['recent', 'upload'], collection: type === 'img' ? 'Photos' : 'Footnotes', summary: 'Recently uploaded — indexed and ready to search.', date: 'Just now', author: this.userName(), size: (Math.floor(Math.random() * 8) + 1) + '.' + Math.floor(Math.random() * 9) + ' MB', pages: Math.floor(Math.random() * 30) + 3 };
+          const nd = { id, title: name.replace(/\.[^.]+$/, ''), type, tags: ['recent', 'upload'], collection: target, summary: 'Recently uploaded — indexed and ready to search.', date: 'Just now', author: this.userName(), size: (Math.floor(Math.random() * 8) + 1) + '.' + Math.floor(Math.random() * 9) + ' MB', pages: Math.floor(Math.random() * 30) + 3 };
           return { uploads: ups, documents: [nd, ...s.documents] };
         }
         return { uploads: ups };
@@ -733,7 +1376,7 @@ class Component extends DCLogic {
       onView: () => this.openDoc(d.id),
       onToggleFav: () => this.toggleFav(d.id),
       onDownload: () => this.download(d.id),
-      onDelete: () => this.deleteDoc(d.id)
+      onDelete: () => this.requestDeleteDoc(d.id)
     };
   }
 
@@ -741,11 +1384,38 @@ class Component extends DCLogic {
     const s = this.state;
     const isEditor = s.role === 'editor';
     const route = s.route;
-    const titles = { search: 'Ask & Search', library: 'Library', favorites: 'Favorites', upload: 'Upload' };
+    const isMobile = s.vw < 768;
+
+    // --- responsive shell styles ---
+    const sidebarBase = 'background:#EDE6DB;display:flex;flex-direction:column;padding:18px 14px;';
+    const sidebarStyle = isMobile
+      ? sidebarBase + 'position:fixed;top:0;bottom:0;width:266px;z-index:55;border-right:1px solid #E4DBCD;box-shadow:6px 0 30px rgba(40,25,15,.22);transition:left .28s ease;left:' + (s.drawerOpen ? '0px' : '-300px') + ';'
+      : sidebarBase + 'width:250px;flex:none;border-right:1px solid #E4DBCD;';
+    const headerStyle = 'height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 ' + (isMobile ? '16px' : '28px') + ';border-bottom:1px solid #E7DFD2;background:#F8F4ED;';
+
+    const sourcesAsideBase = 'background:#FBF8F3;overflow:auto;';
+    const sourcesAsideStyle = isMobile
+      ? sourcesAsideBase + 'position:fixed;left:0;right:0;max-height:80vh;z-index:55;border-top:1px solid #E7DFD2;border-radius:14px 14px 0 0;padding:8px 18px 24px;box-shadow:0 -12px 34px rgba(40,25,15,.2);transition:bottom .3s ease;bottom:' + (s.sheetOpen ? '0px' : '-101vh') + ';'
+      : sourcesAsideBase + 'width:330px;flex:none;border-left:1px solid #E7DFD2;padding:22px 20px;';
+
+    // --- auth (sign-in) responsive styles ---
+    const authWrapStyle = isMobile
+      ? 'min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:44px 20px;background:radial-gradient(1200px 600px at 70% -10%, #FBEFE6 0%, #F4F0E9 55%);'
+      : 'min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;background:radial-gradient(1200px 600px at 70% -10%, #FBEFE6 0%, #F4F0E9 55%);';
+    const composerOuterStyle = 'flex:none;border-top:1px solid #ECE4D7;background:#F8F4ED;padding:' + (isMobile ? '8px 10px 10px' : '14px 36px 22px') + ';';
+    const composerBoxStyle = 'display:flex;align-items:flex-end;gap:10px;background:#FBF7EC;border:1px solid #E3DACD;border-radius:4px;padding:8px 8px 8px 16px;' + (isMobile ? '' : 'max-width:720px;margin:0 auto;box-shadow:0 1px 2px rgba(60,45,30,.04),0 2px 6px rgba(60,45,30,.05);');
+    const welcomeWrapStyle = (isMobile ? 'justify-content:flex-start;padding:36px 24px 40px;' : 'justify-content:center;padding:40px;') + 'flex:1;overflow:auto;display:flex;flex-direction:column;align-items:center;';
+    const loginCardStyle = isMobile
+      ? 'background:transparent;border:none;border-radius:4px;padding:0;box-shadow:none;'
+      : 'background:#FBF7EC;border:1px solid #EAE2D6;border-radius:4px;padding:34px 32px;box-shadow:0 1px 2px rgba(60,45,30,.04),0 6px 16px rgba(60,45,30,.08);';
+    const titles = { search: 'Ask & Search', library: 'Library', favorites: 'Favorites', collections: 'Collections' };
 
     // library filtering
+    const collNames = s.collections.map(c => c.name);
+    const accessible = (name) => { if (isEditor) return true; const c = s.collections.find(x => x.name === name); return !c || c.researcherAccess !== false; };
     const q = s.libQuery.trim().toLowerCase();
     const filtered = s.documents.filter(d => {
+      if (!accessible(d.collection)) return false;
       if (s.typeFilter !== 'all' && d.collection !== s.typeFilter) return false;
       if (!q) return true;
       return (d.title + ' ' + d.tags.join(' ') + ' ' + d.summary + ' ' + d.collection).toLowerCase().includes(q);
@@ -757,10 +1427,9 @@ class Component extends DCLogic {
     for (let i = s.messages.length - 1; i >= 0; i--) {
       const m = s.messages[i];
       if (m.role === 'assistant' && m.sourceIds) {
-        currentSources = m.sourceIds.map((id, idx) => {
-          const d = this.docById(id);
-          const faved = s.favs.includes(id);
-          return { n: idx + 1, title: d.title, typeLabel: this.typeLabel(d.type), snippet: d.summary, faved, notFaved: !faved, onView: () => this.openDoc(id), onDownload: () => this.download(id), onToggleFav: () => this.toggleFav(id) };
+        currentSources = m.sourceIds.map(id => this.docById(id)).filter(Boolean).map((d, idx) => {
+          const faved = s.favs.includes(d.id);
+          return { n: idx + 1, title: d.title, typeLabel: this.typeLabel(d.type), snippet: d.summary, faved, notFaved: !faved, onView: () => this.openDoc(d.id), onDownload: () => this.download(d.id), onToggleFav: () => this.toggleFav(d.id) };
         });
         break;
       }
@@ -770,10 +1439,9 @@ class Component extends DCLogic {
       isUser: m.role === 'user',
       isAssistant: m.role === 'assistant',
       text: m.text,
-      hasSources: !!(m.sourceIds && m.sourceIds.length),
-      sources: (m.sourceIds || []).map((id, idx) => {
-        const d = this.docById(id);
-        return { n: idx + 1, title: d.title, onView: () => this.openDoc(id) };
+      hasSources: !!(m.sourceIds && m.sourceIds.map(id => this.docById(id)).filter(Boolean).length),
+      sources: (m.sourceIds || []).map(id => this.docById(id)).filter(Boolean).map((d, idx) => {
+        return { n: idx + 1, title: d.title, onView: () => this.openDoc(d.id) };
       })
     }));
 
@@ -789,10 +1457,32 @@ class Component extends DCLogic {
 
     const uploads = s.uploads.map(u => ({
       name: u.name, typeLabel: this.typeLabel(u.type), done: u.status === 'done',
-      statusLabel: u.status === 'done' ? 'Indexed · added to catalog' : 'Uploading… ' + Math.round(u.progress) + '%',
+      statusLabel: (u.status === 'done' ? 'Indexed · added to ' : 'Uploading to ') + (u.collection || '—') + (u.status === 'done' ? '' : ' · ' + Math.round(u.progress) + '%'),
       statusColor: u.status === 'done' ? '#4E8C4A' : '#A79D90',
       barStyle: 'height:100%;width:' + Math.min(100, u.progress) + '%;border-radius:999px;background:' + (u.status === 'done' ? '#7BA86F' : '#4A5E22') + ';transition:width .24s ease;'
     }));
+
+    const manageCollections = s.collections.map(c => ({
+      name: c.name,
+      count: s.documents.filter(d => d.collection === c.name).length,
+      accessLabel: c.researcherAccess !== false ? 'Researcher access on' : 'Researcher access off',
+      accessOn: c.researcherAccess !== false,
+      onOpen: () => this.openColl(c.name),
+      onEdit: () => this.startEditColl(c.name)
+    }));
+    const newCollName = (s.newCollName || '').trim();
+    const dupColl = s.collections.some(c => c.name.toLowerCase() === newCollName.toLowerCase());
+    const canCreate = newCollName.length > 0 && !dupColl;
+
+    // collection detail screen
+    const detailColl = s.openCollection ? this.collByName(s.openCollection) : null;
+    const detailDocs = detailColl ? s.documents.filter(d => d.collection === detailColl.name).map(d => ({
+      id: d.id, title: d.title, typeLabel: this.typeLabel(d.type),
+      meta: d.date + ' · ' + d.size + ' · ' + d.author,
+      onView: () => this.openDoc(d.id),
+      onEdit: () => this.startEditDoc(d.id),
+      onDelete: () => this.requestDeleteDoc(d.id)
+    })) : [];
 
     const canSend = s.draft.trim().length > 0;
     const sendBtnStyle = 'flex:none;width:42px;height:42px;border-radius:3px;border:none;cursor:' + (canSend ? 'pointer' : 'default') + ';display:flex;align-items:center;justify-content:center;transition:background .15s;background:' + (canSend ? '#4A5E22' : '#E6DDD0') + ';color:' + (canSend ? '#fff' : '#B5AB9E') + ';';
@@ -803,9 +1493,22 @@ class Component extends DCLogic {
 
     const dropStyle = 'cursor:pointer;border-radius:4px;padding:44px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;transition:all .18s;border:2px dashed ' + (s.dragOver ? '#4A5E22' : '#D9CEBE') + ';background:' + (s.dragOver ? '#E9ECD7' : '#FBF8F3') + ';';
 
-    const collections = ['Long Trail News', 'Ridgelines', 'Long Trail Guide Books', 'Sterling Stomper', 'USF', 'Trail Talk', 'Smoke & Blazes', 'The Stepping Stone', 'Ramblings', 'Footnotes', 'The Crumb', 'Maps', 'Photos'];
-    const typeFilters = [{ key: 'all', label: 'All' }].concat(collections.map(c => ({ key: c, label: c })))
-      .map(f => ({ label: f.label, active: s.typeFilter === f.key, style: this.chipStyle(s.typeFilter === f.key), onClick: () => this.setState({ typeFilter: f.key }) }));
+    const collections = s.collections;
+    const visibleColls = isEditor ? collections : collections.filter(c => c.researcherAccess !== false);
+    const filterOpts = [{ key: 'all', label: 'All collections' }].concat(visibleColls.map(c => ({ key: c.name, label: c.name })));
+    const typeFilters = filterOpts.map(f => ({ label: f.key === 'all' ? 'All' : f.label, active: s.typeFilter === f.key, style: this.chipStyle(s.typeFilter === f.key), onClick: () => this.setState({ typeFilter: f.key }) }));
+    const collectionList = filterOpts.map(f => {
+      const active = s.typeFilter === f.key;
+      const count = f.key === 'all' ? s.documents.length : s.documents.filter(d => d.collection === f.key).length;
+      return {
+        label: f.label, active, count,
+        rowStyle: 'display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:15px 18px;border:none;border-bottom:1px solid #F0E9DD;cursor:pointer;font-family:inherit;font-size:16px;background:' + (active ? '#E9ECD7' : 'transparent') + ';color:' + (active ? '#3A4A1A' : '#2A2520') + ';font-weight:' + (active ? '700' : '500') + ';',
+        countStyle: 'margin-left:auto;font-size:13px;font-weight:600;color:' + (active ? '#4A5E22' : '#A79D90') + ';',
+        checkVisible: active,
+        onClick: () => this.setState({ typeFilter: f.key, collModalOpen: false })
+      };
+    });
+    const collFilterActive = s.typeFilter !== 'all';
 
     return {
       notAuthed: !s.authed,
@@ -841,25 +1544,50 @@ class Component extends DCLogic {
       isEditor,
       onSignOut: () => this.signOut(),
 
-      goSearch: () => this.setState({ route: 'search' }),
-      goLibrary: () => this.setState({ route: 'library' }),
-      goFavorites: () => this.setState({ route: 'favorites' }),
-      goUpload: () => this.setState({ route: 'upload' }),
+      isMobile,
+      authWrapStyle,
+      loginCardStyle,
+      welcomeWrapStyle,
+      composerOuterStyle,
+      composerBoxStyle,
+      sidebarStyle,
+      headerStyle,
+      sourcesAsideStyle,
+      drawerOpen: s.drawerOpen,
+      drawerBackdrop: isMobile && s.drawerOpen,
+      openDrawer: () => this.setState({ drawerOpen: true }),
+      closeDrawer: () => this.setState({ drawerOpen: false }),
+      sheetBackdrop: isMobile && s.sheetOpen,
+      openSheet: () => this.setState({ sheetOpen: true }),
+      closeSheet: () => this.setState({ sheetOpen: false }),
+      collModalOpen: s.collModalOpen,
+      openCollModal: () => this.setState({ collModalOpen: true }),
+      closeCollModal: () => this.setState({ collModalOpen: false }),
+      collectionList,
+      collFilterActive,
+      showLibTop: !isMobile,
+      showBottomBar: isMobile && (route === 'library' || (route === 'search' && (currentSources.length > 0 || s.messages.length > 0))),
+      showNewChatHeader: route === 'search' && s.messages.length > 0 && !isMobile,
+
+      goSearch: () => this.setState({ route: 'search', drawerOpen: false }),
+      goLibrary: () => this.setState({ route: 'library', drawerOpen: false }),
+      goFavorites: () => this.setState({ route: 'favorites', drawerOpen: false }),
+      goCollections: () => this.setState({ route: 'collections', openCollection: null, drawerOpen: false }),
       navSearchStyle: this.navStyle(route === 'search'),
       navLibraryStyle: this.navStyle(route === 'library'),
       navFavStyle: this.navStyle(route === 'favorites'),
-      navUploadStyle: this.navStyle(route === 'upload'),
+      navUploadStyle: this.navStyle(route === 'collections'),
 
       hasFavs: favDocs.length > 0,
       noFavs: favDocs.length === 0,
       favCount: favDocs.length,
       favDocs,
 
-      sectionTitle: titles[route],
+      sectionTitle: (route === 'collections' && s.openCollection) ? s.openCollection : titles[route],
       isSearch: route === 'search',
       isLibrary: route === 'library',
       isFavorites: route === 'favorites',
-      isUpload: route === 'upload' && isEditor,
+      isUpload: route === 'collections' && isEditor,
       showNewChat: route === 'search' && s.messages.length > 0,
       onNewChat: () => this.newChat(),
 
@@ -880,6 +1608,7 @@ class Component extends DCLogic {
       currentSources,
       hasSources: currentSources.length > 0,
       noSources: currentSources.length === 0,
+      sourcesCount: currentSources.length,
 
       libQuery: s.libQuery,
       onLibQuery: (e) => this.setState({ libQuery: e.target.value }),
@@ -900,8 +1629,77 @@ class Component extends DCLogic {
       dropStyle,
       uploads,
       hasUploads: uploads.length > 0,
+      newCollName: s.newCollName,
+      onNewCollName: (e) => this.setState({ newCollName: e.target.value }),
+      onNewCollKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); this.createCollection(); } },
+      onCreateCollection: () => this.createCollection(),
+      canCreate,
+      createBtnStyle: 'flex:none;display:flex;align-items:center;justify-content:center;gap:7px;height:46px;padding:0 18px;border-radius:3px;border:none;font-size:14.5px;font-weight:600;font-family:inherit;cursor:' + (canCreate ? 'pointer' : 'default') + ';background:' + (canCreate ? '#4A5E22' : '#DDD3C4') + ';color:' + (canCreate ? '#fff' : '#A79D90') + ';',
+      manageCollections,
+
+      // collection list vs detail
+      isCollList: route === 'collections' && isEditor && !s.openCollection,
+      isCollDetail: route === 'collections' && isEditor && !!detailColl,
+      detailName: detailColl ? detailColl.name : '',
+      detailDescription: detailColl ? (detailColl.description || '') : '',
+      detailNotes: detailColl ? (detailColl.notes || '') : '',
+      detailHasDescription: !!(detailColl && detailColl.description),
+      detailHasNotes: !!(detailColl && detailColl.notes),
+      detailAccessLabel: detailColl ? (detailColl.researcherAccess !== false ? 'Researcher access on' : 'Researcher access off') : '',
+      detailAccessOn: detailColl ? detailColl.researcherAccess !== false : true,
+      detailAccessColor: (detailColl && detailColl.researcherAccess !== false) ? '#4A5E22' : '#B08968',
+      detailDocs,
+      detailDocCount: detailDocs.length,
+      detailHasDocs: detailDocs.length > 0,
+      detailNoDocs: !!detailColl && detailDocs.length === 0,
+      backToCollections: () => this.backToCollections(),
+      onEditDetailColl: () => { if (detailColl) this.startEditColl(detailColl.name); },
+
+      // collection edit modal
+      editCollOpen: !!s.editColl,
+      editCollName: s.editColl ? s.editColl.name : '',
+      editCollDescription: s.editColl ? s.editColl.description : '',
+      editCollNotes: s.editColl ? s.editColl.notes : '',
+      editCollAccess: s.editColl ? s.editColl.researcherAccess : true,
+      onEditCollName: (e) => { const v = e.target.value; this.setState(st => ({ editColl: { ...st.editColl, name: v } })); },
+      onEditCollDescription: (e) => { const v = e.target.value; this.setState(st => ({ editColl: { ...st.editColl, description: v } })); },
+      onEditCollNotes: (e) => { const v = e.target.value; this.setState(st => ({ editColl: { ...st.editColl, notes: v } })); },
+      onToggleEditCollAccess: () => this.setState(st => ({ editColl: { ...st.editColl, researcherAccess: !st.editColl.researcherAccess } })),
+      editCollAccessTrackStyle: 'flex:none;width:46px;height:26px;border-radius:999px;border:none;cursor:pointer;position:relative;transition:background .18s;background:' + ((s.editColl && s.editColl.researcherAccess) ? '#4A5E22' : '#D9CEBE') + ';',
+      editCollAccessKnobStyle: 'position:absolute;top:3px;left:' + ((s.editColl && s.editColl.researcherAccess) ? '23px' : '3px') + ';width:20px;height:20px;border-radius:50%;background:#fff;transition:left .18s;',
+      onSaveEditColl: () => this.saveEditColl(),
+      onCloseEditColl: () => this.closeEditColl(),
+      onDeleteEditColl: () => { const n = s.editingColl; this.closeEditColl(); if (n) this.requestDeleteCollection(n); },
+
+      // file edit modal
+      editDocOpen: !!s.editDoc,
+      editDocTitle: s.editDoc ? s.editDoc.title : '',
+      editDocSummary: s.editDoc ? s.editDoc.summary : '',
+      editDocType: s.editDoc ? s.editDoc.docType : 'Book',
+      docTypeOptions: this.citationTypes(),
+      onEditDocType: (e) => { const v = e.target.value; this.setState(st => ({ editDoc: { ...st.editDoc, docType: v, citation: { ...this.seedCitation({ ...this.docById(st.editingDoc), docType: v }), ...(st.editDoc.citation || {}) } } })); },
+      editCitationFields: (s.editDoc ? this.citationSchema(s.editDoc.docType) : []).map(f => ({
+        key: f.key, label: f.label, value: (s.editDoc && s.editDoc.citation ? s.editDoc.citation[f.key] : '') || '',
+        onChange: (e) => { const v = e.target.value; this.setState(st => ({ editDoc: { ...st.editDoc, citation: { ...(st.editDoc.citation || {}), [f.key]: v } } })); }
+      })),
+      editCitationText: s.editDoc ? this.formatCitation(s.editDoc.docType, s.editDoc.citation).text : '',
+      onEditDocTitle: (e) => { const v = e.target.value; this.setState(st => ({ editDoc: { ...st.editDoc, title: v } })); },
+      onEditDocSummary: (e) => { const v = e.target.value; this.setState(st => ({ editDoc: { ...st.editDoc, summary: v } })); },
+      onSaveEditDoc: () => this.saveEditDoc(),
+      onCloseEditDoc: () => this.closeEditDoc(),
+
+      confirmOpen: !!s.confirm,
+      confirmTitle: s.confirm ? s.confirm.title : '',
+      confirmMessage: s.confirm ? s.confirm.message : '',
+      confirmLabel: s.confirm ? s.confirm.confirmLabel : 'Confirm',
+      onConfirmNo: () => this.closeConfirm(),
+      onConfirmYes: () => { const a = s.confirm && s.confirm.action; this.closeConfirm(); if (a) a(); },
 
       docOpen: !!ad,
+      docDesktop: !isMobile,
+      docMobile: isMobile,
+      docBackdropStyle: 'position:fixed;inset:0;background:rgba(42,30,20,.4);backdrop-filter:blur(3px);display:flex;z-index:50;animation:kc-fade .2s ease both;' + (isMobile ? 'padding:0;align-items:stretch;justify-content:stretch;' : 'padding:32px;align-items:center;justify-content:center;'),
+      docCardStyle: 'background:#FBF8F3;overflow:hidden;display:flex;flex-direction:column;animation:kc-pop .28s ease both;' + (isMobile ? 'width:100%;height:100%;border-radius:0;' : 'width:100%;max-width:820px;max-height:86vh;border-radius:4px;box-shadow:0 14px 40px rgba(40,25,15,.26);'),
       stop: (e) => e.stopPropagation(),
       onCloseDoc: () => this.closeDoc(),
       activeTitle: ad ? ad.title : '',
@@ -911,6 +1709,9 @@ class Component extends DCLogic {
       activeAuthor: ad ? ad.author : '',
       activeSize: ad ? ad.size : '',
       activeTags: ad ? ad.collection : '',
+      activeDocType: ad ? (ad.docType || '—') : '',
+      activeCitationEl: this.citationEl(ad),
+      onCopyCitation: () => { if (!ad) return; const txt = this.formatCitation(ad.docType, ad.citation).text; try { navigator.clipboard.writeText(txt); } catch (e) {} this.showToast('Citation copied'); },
       activePreview: ad ? this.typeLabel(ad.type) + ' preview' : '',
       activeFaved: adFaved,
       activeNotFaved: !adFaved,

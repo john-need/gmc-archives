@@ -22,7 +22,7 @@ function buildApp(userDirectory: ReturnType<typeof createFakeUserDirectory>, ema
   const authProvider = createFakeAuthProvider({ email, userDirectory });
   const sessionApp = express();
   sessionApp.use(createSessionMiddleware(authProvider));
-  sessionApp.use(createSessionRoutes());
+  sessionApp.use(createSessionRoutes(authProvider));
 
   return { editorApp, sessionApp, authProvider };
 }
